@@ -1,0 +1,335 @@
+/* ==========================================================================
+   1. RESET & VARIABLES
+   ========================================================================== */
+:root { 
+    --beige-light: #f6efe6;
+    --brown: #8c6a4a;
+    --accent-orange: #ff6b4a; 
+    --accent-red: #ff0000;    
+    --transition-smooth: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    padding-top: 0;
+}
+
+/* Suppression globale du trait bleu/soulignement forcé par Bootstrap */
+a, .nav-link, .btn, .btnconnexion, .btn-artiste, .btn-suivant, .art-card, .hero-scroll-btn {
+    text-decoration: none !important; 
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* ==========================================================================
+   2. STRUCTURE GLOBALE (Layout)
+   ========================================================================== */
+.app-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content-area {
+    flex: 1 1 auto !important;
+    padding-top: 0;
+}
+
+.page-container,
+.navbar-dark-mode + main .content-area {
+    padding-top: 80px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.content-area > section {
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+/* ==========================================================================
+   3. NAVIGATION (Navbar & Links)
+   ========================================================================== */
+.nomlogo { font-size: 110%; }
+
+.navbar-nav {
+    align-items: center; /* Centre verticalement les liens et le bouton */
+}
+
+.nav-link {
+    transition: var(--transition-smooth);
+    font-weight: 500;
+    font-size: 10px;
+    color: inherit; /* Permet aux classes parentes de gérer la couleur de base */
+}
+
+/* 🟢 CORRECTION ICI : Le survol rouge doit être prioritaire partout */
+.nav-link:hover, 
+.nav-link.active {
+    color: var(--accent-red) !important; 
+}
+
+/* Mode Clair (sur le Hero) */
+.navbar-light-mode .nav-link, 
+.navbar-light-mode .nomlogo { 
+    color: #ffffff; /* Retrait du !important ici */
+}
+
+/* Mode Sombre (Pages internes) */
+.navbar-dark-mode .nav-link, 
+.navbar-dark-mode .nomlogo { 
+    color: #000000; 
+}
+
+/* Navbar après Scroll */
+.hero-nav.scrolled {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(246, 239, 230, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: var(--transition-smooth);
+    z-index: 1000;
+}
+
+.hero-nav.scrolled .nav-link,
+.hero-nav.scrolled .nomlogo { 
+    color: #000 !important; 
+}
+
+/* Ré-insister sur le rouge quand on a scrollé */
+.hero-nav.scrolled .nav-link:hover { 
+    color: var(--accent-red) !important; 
+}
+
+/* Dropdown User */
+.dropdown-toggle {
+    font-weight: 500;
+    border: 1.5px solid currentColor;
+    transition: var(--transition-smooth);
+}
+
+.dropdown-menu {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    padding: 10px;
+    margin-top: 10px !important;
+}
+
+.dropdown-item {
+    border-radius: 8px;
+    padding: 8px 15px;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.dropdown-item:hover {
+    background-color: var(--beige-light);
+    color: var(--brown);
+}
+
+/* ==========================================================================
+   4. BOUTONS
+   ========================================================================== */
+
+/* Bouton Connexion */
+.btnconnexion {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    color: #000000 !important;
+    font-weight: 500;
+    border: none;
+    border-radius: 50px; 
+    padding: 8px 25px;
+    font-size: 17px;
+    line-height: 2;
+    transition: var(--transition-smooth);
+    margin-left: 15px; /* Espace entre les liens et le bouton */
+}
+
+.btnconnexion:hover {
+    background-color: #f8f9fa;
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    color: #000000 !important;
+}
+
+.hero-nav.scrolled .btnconnexion {
+    background-color: #000 !important;
+    color: #fff !important;
+}
+.lang-select-nav {
+    background: transparent;
+    border: 1px solid rgba(128, 128, 128, 0.3);
+    color: inherit; /* Prend le blanc ou le noir de la nav */
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+}
+
+.navbar-light-mode:not(.scrolled) .lang-select-nav {
+    color: white;
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.lang-select-nav option {
+    color: black; /* Pour que les options soient lisibles dans le menu déroulant */
+}
+
+/* Bouton Artiste */
+.btn.btn-artiste {
+    display: inline-flex;
+    align-items: center;
+    background-color: #ffffff;
+    color: #000;
+    border-radius: 100px;
+    font-weight: 644;
+    padding: 11px 28px 11px 35px !important;
+    transition: var(--transition-smooth);
+}
+
+.btn-artiste .fleche {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #000;
+    color: #fff !important;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    margin-left: 22px;
+    font-size: 22px;
+    transition: transform 0.3s ease;
+}
+
+.btn-artiste:hover {
+    background-color: #f8f9fa;
+    transform: scale(1.05);
+}
+
+.btn-artiste:hover .fleche { transform: translateX(5px); }
+
+/* ==========================================================================
+   5. SECTIONS (Hero & Art Cards)
+   ========================================================================== */
+.Art { font-size: 120px; font-family: f; }
+
+#bas { scroll-margin-top: 90px; }
+
+.hero-section { position: relative; overflow: hidden; }
+
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+    z-index: 0;
+    transform: scale(1.02);
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.45));
+    z-index: 1;
+}
+
+.hero-scroll-btn {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid rgba(128,128,128,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #444444;
+    z-index: 3;
+    animation: hero-bounce 2s infinite;
+    transition: var(--transition-smooth);
+}
+
+@keyframes hero-bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+}
+
+/* Art Cards */
+.art-card { height: 360px; display: block; border-radius: 1.5rem !important; overflow: hidden; }
+.art-card img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+.art-card:hover img { transform: scale(1.07); }
+
+.card-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.15) 45%, transparent);
+    z-index: 1;
+}
+
+.card-info { position: absolute; bottom: 0; left: 0; right: 0; z-index: 2; }
+
+/* ==========================================================================
+   6. RESPONSIVE & MOBILE
+   ========================================================================== */
+@media (max-width: 991px) {
+    .page-container { padding-top: 70px; }
+    
+    .navbar-collapse {
+        background-color: rgba(246, 239, 230, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        margin-top: 15px;
+        padding: 20px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+    .navbar-nav .nav-link {
+        color: var(--brown) !important;
+        font-size: 1.2rem;
+        padding: 12px 0 !important;
+        font-weight: 600;
+    }
+
+    /* Responsivité du select langue en mode mobile */
+    .lang-select-nav {
+        margin: 10px auto;
+        display: block;
+        width: fit-content;
+        color: var(--brown) !important;
+        border-color: var(--brown) !important;
+        font-size: 1rem;
+        padding: 5px 15px;
+    }
+
+    .nav-connexion-mobile { border-top: 1px solid rgba(140, 106, 74, 0.2); margin-top: 10px; }
+    .navbar-toggler { border-color: rgba(81, 80, 80, 0.5); background-color: rgba(0, 0, 0, 0.1); }
+}
+
+@media (min-width: 992px) {
+    .art-card { height: 420px; }
+}
+
+.bg-beige-light { background-color: var(--beige-light) !important; }

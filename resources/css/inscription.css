@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  --bg-color: #f8f4eb; 
+  --card-bg: #ffffff;
+  --text-main: #1a1a1a;
+  --text-secondary: #666666;
+  --accent-red: #ff5c4d; 
+  --border-color: #e0e0e0;
+}
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px 20px; }
+
+.login-card {
+  background: var(--card-bg);
+  width: 100%;
+  max-width: 400px;
+  padding: 30px 40px; 
+  border-radius: 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.input-group {
+  margin-bottom: 1rem; 
+}
+
+.input-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #444;
+}
+.input-group input {
+  padding: 10px 16px; /* Plus compact */
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+.footer-link a {
+  color: grey;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 576px) {
+    .login-card {
+        padding: 25px;
+        max-width: 90%;
+    }
+    .title {
+        font-size: 1.8rem;
+    }
+}

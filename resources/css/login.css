@@ -1,0 +1,201 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap');
+:root {
+  --bg-color: #f8f4eb; 
+  --card-bg: #ffffff;
+  --text-main: #1a1a1a;
+  --text-secondary: #666666;
+  --accent-red: #ff5c4d; 
+  --border-color: #e0e0e0;
+}
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  font-family: 'Inter', sans-serif;
+  color: var(--text-main);
+}
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+.header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  margin-top: 1.5rem;
+}
+.google-button-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 25px;
+}
+.brand-name1 {   
+  font-size: 1.7rem;
+  letter-spacing: -1px;
+  color: #000;
+  margin: 0;
+  line-height: 1; /* Aligne mieux le texte avec l'image */
+}
+.title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  margin: 0 0 0.5rem 0;
+}
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+.login-card {
+  background: var(--card-bg);
+  width: 100%;
+  max-width: 400px;
+  padding: 40px;
+  border-radius: 24px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+.input-group {
+  margin-bottom: 1.2rem;
+  display: flex;
+  flex-direction: column;
+}
+.input-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #444;
+}
+.input-group input {
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border 0.3s ease;
+}
+.input-group input:focus {
+  outline: none;
+  border-color: #000;
+}
+.btn-primary {
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 14px;
+  border-radius: 30px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+  font-size: 0.95rem;
+}
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #eee;
+}
+.divider span {
+  padding: 0 10px;
+}
+.btn-google {
+  background: #fff;
+  border: 1px solid var(--border-color);
+  padding: 12px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-bottom: 20px;
+  transition: background 0.2s;
+}
+.btn-google img {
+  width: 18px;
+}
+.signup-link {
+  color: var(--accent-red);
+  text-decoration: none;
+  font-weight: 500;
+  text-align: center;
+  font-size: 0.9rem;
+}
+.footer-link {
+  margin-top: 30px;
+}
+.footer-link a {
+  color: grey;
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin-left: -40px;
+}
+.google-button-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+/* --- AJOUTS POUR LE LOGIN --- */
+
+.alert {
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.alert-danger {
+    background-color: #ffe5e5;
+    color: #d93025;
+    border: 1px solid #ffcccc;
+}
+
+/* Amélioration du bouton primaire pour le clic */
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+.btn-primary:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+/* Style spécifique pour le lien de retour en bas */
+.footer-link-login {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.footer-link-login a {
+    text-decoration: none;
+    color: #666;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.footer-link-login a:hover {
+    color: #000;
+}
+
+@media (max-width: 576px) {
+    .login-card {
+        padding: 25px;
+        max-width: 90%;
+    }
+    .title {
+        font-size: 1.8rem;
+    }
+}

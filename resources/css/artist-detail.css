@@ -1,0 +1,237 @@
+.artist-detail-page{
+background:#f7f5ef;
+min-height:100vh;
+font-family:Inter,sans-serif;
+}
+
+/* HERO */
+
+.artist-hero{
+height:420px;
+background-size:cover;
+background-position:center;
+position:relative;
+display:flex;
+align-items:flex-end;
+}
+
+.hero-overlay{
+position:absolute;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:linear-gradient(to bottom,rgba(0,0,0,0.2),rgba(0,0,0,0.85));
+}
+
+.hero-content{
+position:relative;
+z-index:2;
+padding-bottom:50px;
+color:white;
+}
+
+.hero-content h1{
+font-family:Playfair Display,serif;
+font-size:64px;
+font-weight:800;
+margin-bottom:10px;
+}
+
+.artist-location{
+font-size:18px;
+opacity:0.9;
+}
+
+/* MAIN CONTENT */
+
+.artist-content{
+padding:60px 0;
+}
+
+/* SIDEBAR */
+
+.artist-info-card{
+background:white;
+border-radius:16px;
+padding:30px;
+box-shadow:0 10px 25px rgba(0,0,0,0.05);
+position:sticky;
+top:100px;
+}
+
+.artist-info-card h4{
+font-weight:700;
+margin-bottom:15px;
+}
+
+.artist-info-card p{
+color:#666;
+font-size:14px;
+line-height:1.6;
+}
+
+.artist-contact h6{
+font-size:12px;
+text-transform:uppercase;
+color:#888;
+margin-top:20px;
+}
+
+.artist-contact a{
+display:block;
+margin-top:10px;
+color:#333;
+text-decoration:none;
+font-size:14px;
+}
+
+.artist-contact i{
+margin-right:8px;
+}
+
+.social-icons{
+display:flex;
+gap:15px;
+margin-top:15px;
+}
+
+.social-icons i{
+font-size:18px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.social-icons i:hover{
+color:#ff6b6b;
+}
+
+/* CONTACT BUTTON */
+
+.btn-contact{
+width:100%;
+margin-top:20px;
+background:black;
+color:white;
+border:none;
+padding:10px;
+border-radius:40px;
+}
+
+/* GALLERY */
+
+.gallery-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:25px;
+}
+
+.gallery-header h3{
+font-weight:700;
+}
+
+.gallery-header span{
+background:#ddd;
+padding:5px 12px;
+border-radius:20px;
+font-size:13px;
+}
+
+/* GRID */
+
+.artworks-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:25px;
+}
+
+/* CARD */
+
+.artwork-card{
+background:white;
+border-radius:15px;
+overflow:hidden;
+box-shadow:0 8px 20px rgba(0,0,0,0.05);
+transition:0.3s;
+}
+
+.artwork-card:hover{
+transform:translateY(-6px);
+}
+
+/* IMAGE */
+
+.artwork-image{
+position:relative;
+overflow:hidden;
+}
+
+.artwork-image img{
+width:100%;
+height:260px;
+object-fit:cover;
+transition:0.5s;
+}
+
+.artwork-card:hover img{
+transform:scale(1.05);
+}
+
+/* OVERLAY */
+
+.artwork-overlay{
+position:absolute;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:rgba(0,0,0,0.5);
+display:flex;
+align-items:center;
+justify-content:center;
+opacity:0;
+transition:0.3s;
+}
+
+.artwork-overlay button{
+background:white;
+border:none;
+padding:8px 16px;
+border-radius:30px;
+font-size:13px;
+}
+
+.artwork-image:hover .artwork-overlay{
+opacity:1;
+}
+
+/* TEXT */
+
+.artwork-info{
+padding:15px;
+}
+
+.artwork-info h6{
+font-weight:700;
+margin-bottom:5px;
+}
+
+.artwork-info p{
+font-size:13px;
+color:#777;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:992px){
+
+.artworks-grid{
+grid-template-columns:1fr;
+}
+
+.hero-content h1{
+font-size:42px;
+}
+
+}

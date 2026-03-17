@@ -1,0 +1,98 @@
+.bios-section {
+    padding: 100px 0;
+    background-color: #ffffff;
+}
+
+.bio-card {
+    display: flex;
+    align-items: center;
+    gap: 80px;
+    margin-bottom: 120px;
+}
+
+/* L'EFFET CROISÉ : On inverse l'ordre uniquement pour le deuxième bloc */
+.bio-card.reversed {
+    flex-direction: row-reverse;
+}
+
+/* On force les deux colonnes à 50% chacune */
+.bio-image-side, 
+.bio-text-side {
+    flex: 1;
+    width: 50%;
+}
+
+.bio-image-side img {
+    width: 100%;
+    /* aspect-ratio garantit que Lois et Antony ont la même taille de photo */
+    aspect-ratio: 4 / 3; 
+    object-fit: cover;
+    border-radius: 40px; /* Coins très arrondis comme ta template */
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    display: block;
+}
+
+.bio-subtitle {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #888;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.bio-title {
+    font-size: 52px;
+    font-family: 'Playfair Display', serif; /* Change par ta police de titre */
+    font-weight: bold;
+    margin-bottom: 25px;
+    color: #000;
+}
+
+.bio-description {
+    font-size: 18px;
+    line-height: 1.7;
+    color: #444;
+    margin-bottom: 35px;
+}
+
+.bio-btn {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 14px 40px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.bio-btn:hover {
+    transform: scale(1.05);
+    background-color: #333;
+}
+
+/* RESPONSIVE : Correction pour taille identique sur mobile */
+@media (max-width: 991px) {
+    .bio-card, 
+    .bio-card.reversed {
+        flex-direction: column !important; /* Image toujours en haut sur mobile */
+        gap: 30px;
+        margin-bottom: 80px;
+    }
+
+    .bio-image-side, 
+    .bio-text-side {
+        width: 100%;
+    }
+
+    .bio-image-side img {
+        aspect-ratio: 16 / 9; /* Format paysage identique pour les deux sur mobile */
+        border-radius: 25px;
+    }
+
+    .bio-title {
+        font-size: 36px;
+    }
+}

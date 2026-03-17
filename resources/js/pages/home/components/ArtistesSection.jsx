@@ -1,0 +1,64 @@
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
+export default function ArtistesSection() {
+  const [artistes, setArtistes] = useState([]);
+
+  useEffect(() => {
+    setArtistes(mockArtistes);
+  }, []);
+
+  const display = artistes.slice(0, 6);
+
+  return (
+    <section id="bas" className="py-5" style={{ backgroundColor: '#f4ece4' }}>
+      <div className="container-fluid px-md-5">
+        <div className="mb-5 text-center">
+          <p className="text-muted small mb-1">NOS ARTISTES</p>
+          <h2 className="fw-bold display-6">
+            Découvrez Nos <br /> Talents Artistiques
+          </h2>
+        </div>
+
+        <div className="row g-4 justify-content-center">
+          {display.map((a) => (
+            <div key={a.id} className="col-12 col-md-6 col-lg-4">
+              <Link
+                to={`/artistes/${a.slug}`}
+                className="art-card d-block position-relative overflow-hidden rounded-4 border-0 shadow-sm"
+              >
+                <img
+                  src={a.photo_url}
+                  alt={a.nom_scene}
+                  className="w-100 h-100 object-cover"
+                  loading="lazy"
+                  style={{ objectFit: 'cover', height: '420px' }}
+                />
+                <div className="card-gradient"></div>
+                <div className="card-info p-4">
+                  <h3 className="h5 text-white mb-1">{a.nom_scene}</h3>
+                  <p className="text-white-50 mb-0">{a.specialite}</p>
+                </div>
+              </Link>
+            </div>
+          ))}
+        </div>
+
+        <div className="text-center mt-5">
+          <Link to="/artistes" className="btn btn-dark rounded-pill px-5 py-3">
+            Voir tous les artistes →
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const mockArtistes = [
+  { id: "1", nom_scene: "Anthony Chambaud", specialite: "Peinture Abstraite", photo_url: "/images/Anthony_Chambaud_peinture_abstraite.jpg", slug: "anthony-chambaud" },
+  { id: "2", nom_scene: "Emmanuel Sellier", specialite: "Sculpture Moderne", photo_url: "/images/Emmanuel Sellier_sculpture_moderne.png", slug: "emmanuel-sellier" },
+  { id: "3", nom_scene: "Hannah Reyes Morales", specialite: "Photographie Artistique", photo_url: "/images/Hannah-Reyes-Morales_photographe.jpg", slug: "hannah-reyes-morales" },
+  { id: "4", nom_scene: "Mad Dog Jones", specialite: "Art Numérique", photo_url: "/images/Mad dog jones_art numerique.webp", slug: "mad-dog-jones" },
+  { id: "5", nom_scene: "Karla Ortiz", specialite: "Illustration", photo_url: "/images/Karla Ortiz_illustration.jpg", slug: "karla-ortiz" },
+  { id: "6", nom_scene: "Cecily Brown", specialite: "Art Contemporain", photo_url: "/images/Cecily Brown_art_comtemporain.webp", slug: "cecily-brown" }
+];
