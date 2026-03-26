@@ -1,130 +1,78 @@
 import React, { useState, useEffect } from "react";
+import api from "../../api"; 
+import { useLanguage } from "../../context/LanguageContext";
 import SearchBar from "../../components/ui/SearchBar";
 import FiltrerBar from "../../components/ui/FiltrerBar";
 import ArtistCard from "../../components/ui/ArtistCard";
 import "../../../css/artists.css";
 
-const mockArtistes = [
-{
-id: "1",
-nom_scene: "Anthony Chambaud",
-specialite: "Peinture Abstraite",
-photo_url: "/images/Anthony_Chambaud_peinture_abstraite.jpg",
-slug: "anthony-chambaud",
-description: "Artiste explorant les émotions à travers les couleurs et les textures abstraites."
-},
-{
-id: "2",
-nom_scene: "Emmanuel Sellier",
-specialite: "Sculpture Moderne",
-photo_url: "/images/Emmanuel Sellier_sculpture_moderne.png",
-slug: "emmanuel-sellier",
-description: "Sculpteur contemporain transformant la matière en formes organiques."
-},
-{
-id: "3",
-nom_scene: "Hannah Reyes Morales",
-specialite: "Photographie Artistique",
-photo_url: "/images/Hannah-Reyes-Morales_photographe.jpg",
-slug: "hannah-reyes-morales",
-description: "Photographe documentaire capturant des histoires humaines fortes."
-},
-{
-id: "4",
-nom_scene: "Mad Dog Jones",
-specialite: "Art Numérique",
-photo_url: "/images/Mad dog jones_art numerique.webp",
-slug: "mad-dog-jones",
-description: "Artiste digital explorant le cyberpunk et les univers futuristes."
-},
-{
-id: "5",
-nom_scene: "Karla Ortiz",
-specialite: "Illustration",
-photo_url: "/images/Karla Ortiz_illustration.jpg",
-slug: "karla-ortiz",
-description: "Illustratrice reconnue pour ses univers fantastiques et cinématographiques."
-},
-{
-id: "6",
-nom_scene: "Cecily Brown",
-specialite: "Art Contemporain",
-photo_url: "/images/Cecily Brown_art_comtemporain.webp",
-slug: "cecily-brown",
-description: "Artiste contemporaine mêlant abstraction et narration picturale."
-}
-,
-{
-id: "7",
-nom_scene: "Lois van Baarle",
-specialite: "Illustration",
-photo_url: "/images/lois-van-baarle-1023303.jpg",
-slug: "Lois-van-Baarle",
-description: "Spécialisée en illustration digitale et character design."
-}
-];
-
-const categories = [
-"Tous",
-"Peinture Abstraite",
-"Sculpture Moderne",
-"Photographie Artistique",
-"Art Numérique",
-"Illustration",
-"Art Contemporain"
-];
+const categories = ["Tous", "Peinture Abstraite", "Sculpture Moderne", "Photographie Artistique", "Art Numérique", "Illustration", "Art Contemporain"];
 
 export default function PageArtistes() {
-
+  const { locale } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("Tous");
-  const [filteredArtistes, setFilteredArtistes] = useState(mockArtistes);
+  const [dbArtistes, setDbArtistes] = useState([]);
+  const [filteredArtistes, setFilteredArtistes] = useState([]);
+  const [loading, setLoading] = useState(true); // Ajout de l'état loading
 
   useEffect(() => {
-    let result = mockArtistes;
+    const fetchArtistes = async () => {
+      setLoading(true); // On commence le chargement
+      try {
+        const response = await api.get(`/api/artists?lang=${locale}`);
+        const formatted = response.data.map(a => ({
+          id: a.id,
+          nom_scene: a.artist_translations?.[0]?.stage_name || "Artiste",
+          specialite: a.category?.category_translations?.[0]?.name || "Membre Artista",
+          photo_url: a.image_url || "/images/default-avatar.png",
+          slug: a.artist_translations?.[0]?.slug,
+          description: a.artist_translations?.[0]?.bio
+        }));
+        setDbArtistes(formatted);
+      } catch (error) {
+        console.error("Erreur API:", error);
+      } finally {
+        setLoading(false); // Fin du chargement
+      }
+    };
+    fetchArtistes();
+  }, [locale]);
+
+  useEffect(() => {
+    let result = [...dbArtistes];
     if (searchQuery) {
-    result = result.filter(a =>
-    a.nom_scene.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+      result = result.filter(a => a.nom_scene.toLowerCase().includes(searchQuery.toLowerCase()));
     }
     if (activeCategory !== "Tous") {
-    result = result.filter(a => a.specialite === activeCategory);
+      result = result.filter(a => a.specialite === activeCategory);
     }
     setFilteredArtistes(result);
-    }, [searchQuery, activeCategory]);
+  }, [searchQuery, activeCategory, dbArtistes]);
 
   return (
-
     <div className="artistes-template-page">
-
       <div className="container">
-
         <div className="header-text">
           <h1 className="main-title">Nos Artistes</h1>
-          <p className="main-subtitle">
-            Découvrez les talents qui composent notre communauté artistique
-          </p>
+          <p className="main-subtitle">Découvrez les talents qui composent notre communauté artistique</p>
         </div>
-
         <SearchBar onSearch={setSearchQuery} />
-
-        <FiltrerBar
-          categories={categories}
-          activeCategory={activeCategory}
-          onFilterChange={setActiveCategory}
-        />
-
+        <FiltrerBar categories={categories} activeCategory={activeCategory} onFilterChange={setActiveCategory} />
+        
         <div className="artists-grid">
-
-          {filteredArtistes.map((artiste) => (
-            <ArtistCard key={artiste.id} artiste={artiste} />
-          ))}
-
+          {loading ? (
+            // Affiche 4 Skeletons pendant le chargement
+            [1, 2, 3, 4].map((n) => <div key={n} className="skeleton skeleton-card"></div>)
+          ) : filteredArtistes.length > 0 ? (
+            filteredArtistes.map((artiste) => (
+              <ArtistCard key={artiste.id} artiste={artiste}  />
+            ))
+          ) : (
+            <p className="text-center w-100">Aucun artiste trouvé.</p>
+          )}
         </div>
-
       </div>
-
     </div>
-
   );
 }

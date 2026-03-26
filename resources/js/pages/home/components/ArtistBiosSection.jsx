@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 
 export default  function  ArtistBiosSection ()  {
   return (
@@ -9,7 +10,7 @@ export default  function  ArtistBiosSection ()  {
         <div className="bio-card">
           <div className="bio-image-side">
             <img 
-              src="/images/lois-van-baarle-1023303.jpg" 
+              src="/images/lois-van-baarle-artiste-1.webp" 
               alt="Lois van Baarle" 
             />
           </div>
@@ -23,7 +24,10 @@ export default  function  ArtistBiosSection ()  {
               collaboré avec des studios prestigieux comme Disney et Guerrilla Games tout en publiant plusieurs 
               ouvrages d'art à succès.
             </p>
-            <button className="bio-btn">Lire Plus</button>
+            <button className="bio-btn"><Link
+              to={`/artistes/lois-van-baarle`}
+              >Lire Plus</Link></button>
+           
           </div>
         </div>
 
@@ -45,7 +49,9 @@ export default  function  ArtistBiosSection ()  {
               œuvres qui invitent à la contemplation. Il partage également sa passion à travers des cours 
               pour démocratiser la pratique de la peinture abstraite.
             </p>
-            <button className="bio-btn">Lire Plus</button>
+               <button className="bio-btn"><Link
+                to={`/artistes/anthony-chambaud`}
+              >Lire Plus</Link></button>
           </div>
         </div>
 

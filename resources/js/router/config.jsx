@@ -1,40 +1,48 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-// Importations adaptées à ta nouvelle structure de dossiers
+// Imports Pages
 import HomePage from '../pages/home/page.jsx';
-import ArtistesPage from '../pages/artistes/PageArtistes.jsx'; // index.js est ta liste complète
-import ArtisteDetail from '../pages/artistes/detail.jsx'; // detail.js est ton profil
-import EventsPage from "../pages/evenements/EventsPage.jsx"
+import ArtistesPage from '../pages/artistes/PageArtistes.jsx';
+import ArtisteDetail from '../pages/artistes/detail.jsx';
+import EventsPage from "../pages/evenements/EventsPage.jsx";
 import Login from '../pages/connexion/login.jsx';
 import Inscription from '../pages/connexion/inscription.jsx';
 import ForgotPassword from '../pages/connexion/ForgotPassword.jsx';
-import Profile from '../pages/dashboard/Profile.jsx';
 import ResetPassword from '../pages/connexion/ResetPassword.jsx';
 import NotFound from '../pages/NotFound.jsx';
+
+// Dashboards et Sécurité
+import PrivateRoute from '../pages/connexion/PrivateRoute.jsx';
+import Profile from '../pages/Dashboard/Profile.jsx';
+import Dashboard from '../pages/Dashboard/ArtistDashboard.jsx';
+import AdminDashboard from '../pages/admin/AdminDashboard.jsx';
+
 
 export default function RouterConfig() {
   return (
     <Routes>
-      {/* Route d'accueil */}
+      {/* --- ROUTES PUBLIQUES --- */}
       <Route path="/" element={<HomePage />} />
-
-      {/* Liste de tous les artistes */}
       <Route path="/artistes" element={<ArtistesPage />} />
-
-      {/* DÉTAIL ARTISTE : 
-          On remplace :id par :slug pour correspondre à ta table artist_translations 
-      */}
       <Route path="/artistes/:slug" element={<ArtisteDetail />} />
       <Route path="/event" element={<EventsPage />} />
-
-      {/* Authentification */}
       <Route path="/login" element={<Login />} />
       <Route path="/inscription" element={<Inscription />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/profile" element={<Profile />} />
-      {/* Page 404 - Toujours en dernier */}
+
+      {/* --- ROUTES PROTÉGÉES (ARTISTES & ADMIN) --- */}
+      <Route element={<PrivateRoute allowedRoles={['artiste', 'admin']} />}>
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/artist/dashboard" element={<Dashboard />} />
+      </Route>
+
+      {/* --- ROUTES RÉSERVÉES ADMIN --- */}
+      <Route element={<PrivateRoute allowedRoles={['admin']} />}>
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      </Route>
+
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

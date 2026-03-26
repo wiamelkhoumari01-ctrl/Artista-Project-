@@ -16,7 +16,6 @@
 }
 .brand-name {
     font-size: 2.5rem;
-    margin-left: -90px;
     color:white !important;
 }
 .description {
@@ -89,6 +88,13 @@
     margin-left: 20px;
     font-size: 0.85rem;
     cursor: pointer;
+}
+.social-icons .social-link{
+    color: #ffffff !important; /* Force le blanc */
+    text-decoration: none;      /* Enlève le soulignement bleu */
+    display: block;
+}.social-icons .social-link:hover{
+    color: #ffffff !important; /* Force le blanc */
 }
 @media (max-width: 768px) {
     .brand-name { font-size: 1.8rem; }

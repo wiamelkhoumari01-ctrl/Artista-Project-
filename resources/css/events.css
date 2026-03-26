@@ -1,8 +1,9 @@
-.ev-wrapper { background-color: #fcfbf7; min-height: 100vh; padding-bottom: 80px; }
+/* Base Layout */
+.ev-wrapper { background-color: #f8f5f1; min-height: 100vh; padding-bottom: 80px; }
 
 /* HERO */
 .ev-hero-banner {
-    background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/images/event.png') center/cover;
+    background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('/images/event.webp') center/cover;
     height: 480px; position: relative; display: flex; align-items: center; justify-content: center; color: white; text-align: center;
 }
 .ev-hero-overlay h1 { font-family: 'Playfair Display', serif; font-size: 56px; font-weight: 800; }
@@ -15,43 +16,66 @@
     display: flex; align-items: center; gap: 20px; width: 90%; max-width: 1050px;
     z-index: 100; flex-wrap: wrap; justify-content: center;
 }
-
-.ev-pills-container { display: flex; gap: 10px; overflow-x: auto; white-space: nowrap; }
+.ev-pills-container { display: flex; gap: 10px; overflow-x: auto; }
 .pill-btn { border: none; background: #f2f2f2; padding: 10px 22px; border-radius: 50px; font-weight: 600; font-size: 14px; transition: 0.3s; }
 .pill-btn.active { background: black; color: white; }
-
 .ev-divider-v { width: 1px; height: 35px; background: #eee; }
-
 .ev-search-group { display: flex; align-items: center; gap: 15px; }
-.ev-minimal-select { border: none; background: transparent; font-weight: 600; color: #555; outline: none; cursor: pointer; }
-.ev-sep { color: #eee; font-weight: 100; }
+.ev-minimal-select { border: none; background: transparent; font-weight: 600; color: #555; outline: none; }
 
-.ev-lang-toggle { margin-left: 15px; font-size: 13px; font-weight: 800; color: #ccc; }
-.ev-lang-toggle span { cursor: pointer; margin-left: 8px; }
-.ev-lang-toggle span.active { color: #333; text-decoration: underline; }
-
-/* LISTE */
+/* LISTE DES CARTES (MODIFIÉ POUR LE DESIGN PHOTO) */
 .ev-content-area { margin-top: 100px; }
-.ev-section-title { font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 800; margin-bottom: 40px; }
+.ev-section-title { font-family: 'Playfair Display', serif; font-size: 38px; font-weight: 800; margin-bottom: 40px; color: #1a1a1a; }
 
 .ev-item-card {
-    background: white; border-radius: 20px; padding: 30px 40px; margin-bottom: 20px;
-    display: flex; justify-content: space-between; align-items: center;
+    background: white;
+    border-radius: 18px;
+    padding: 25px 35px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* Ombre douce */
+    border: none;
 }
 
-.ev-badge { padding: 5px 15px; border-radius: 20px; font-size: 11px; font-weight: 800; color: white; }
-.st-upcoming { background: #ff7675; }
-.st-current { background: #55efc4; color: #008a63; }
-.st-past { background: #dfe6e9; color: #636e72; }
+.ev-card-header { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
+.ev-card-header h3 { font-size: 22px; font-weight: 700; margin: 0; color: #1a1a1a; }
 
-.ev-item-dates { text-align: right; border-left: 1px solid #f0f0f0; padding-left: 40px; min-width: 180px; }
-.ev-date-main { color: #e67e22; font-size: 22px; font-weight: 800; display: block; }
-.ev-date-range { color: #999; font-size: 14px; }
+/* BADGES COULEURS PHOTO */
+.ev-status-badge { 
+    padding: 6px 16px; 
+    border-radius: 20px; 
+    font-size: 12px; 
+    font-weight: 700; 
+    color: white; 
+}
+.ev-participants-info {
+    font-size: 14px;
+    color: #444;
+    background: #fdf7f2;
+    padding: 5px 12px;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+.ev-participants-info i {
+    color: #e67e22;
+}
+.st-upcoming { background-color: #ff7e5f; } /* Couleur Corail "À venir" */
+.st-current { background-color: #2ecc71; }  /* Couleur Verte "En cours" */
+
+.ev-description { color: #666; font-size: 15px; margin-bottom: 12px; max-width: 600px; }
+.ev-location-info { color: #e67e22; font-size: 14px; font-weight: 500; }
+
+/* BLOC DATE À DROITE */
+.ev-card-date-box { text-align: right; min-width: 180px; }
+.ev-date-start { color: #ff7e5f; font-size: 22px; font-weight: 800; display: block; }
+.ev-date-end { color: #999; font-size: 14px; font-weight: 400; }
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
-    .ev-glass-filter { border-radius: 25px; bottom: -80px; padding: 20px; }
-    .ev-divider-v { display: none; }
-    .ev-item-card { flex-direction: column; align-items: flex-start; }
-    .ev-item-dates { text-align: left; border: none; padding: 0; margin-top: 20px; }
+    .ev-item-card { flex-direction: column; align-items: flex-start; padding: 20px; }
+    .ev-card-date-box { text-align: left; margin-top: 20px; }
+    .ev-hero-overlay h1 { font-size: 36px; }
 }

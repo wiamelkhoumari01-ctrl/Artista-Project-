@@ -7,9 +7,9 @@ import { useLanguage } from '../../context/LanguageContext';
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  
   const { user, logout } = useAuth();
   const location = useLocation();
-  
   const { locale, changeLanguage, availableLanguages } = useLanguage();
 
   const isDark = location.pathname !== "/" && location.pathname !== "/event";
@@ -21,6 +21,15 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => setIsOpen(false), [location]);
+
+  const displayEmail = typeof user?.email === 'string' ? user.email : (user?.email?.email || '');
+  const displayName = user?.username || user?.first_name || displayEmail.split('@')[0] || 'Utilisateur';
+  const displayInitial = displayName.charAt(0).toUpperCase();
+
+  const navBtnClass = (isDark || scrolled) ? "btn-outline-dark" : "btn-outline-light";
+  const navBtnStyle = (isDark || scrolled)
+    ? { color: '#000', borderColor: '#c5a059' }
+    : { color: '#fff', borderColor: '#fff' };
 
   return (
     <nav className={`navbar hero-nav fixed-top navbar-expand-lg py-3 ${isDark ? "navbar-dark-mode" : "navbar-light-mode"} ${scrolled ? "scrolled" : ""}`}>
@@ -49,14 +58,13 @@ export default function Navbar() {
               <HashLink smooth className="nav-link" to="/#contact">Contact</HashLink>
             </li>
 
-            {/* --- SELECTEUR DE LANGUE --- */}
             <li className="nav-item ms-lg-3">
-              <select 
-                className="lang-select-nav" 
-                value={locale} 
+              <select
+                className="lang-select-nav"
+                value={locale}
                 onChange={(e) => changeLanguage(e.target.value)}
               >
-                {availableLanguages.length > 0 ? (
+                {availableLanguages?.length > 0 ? (
                   availableLanguages.map(lang => (
                     <option key={lang.id} value={lang.code}>
                       {lang.code.toUpperCase()}
@@ -72,35 +80,48 @@ export default function Navbar() {
               </select>
             </li>
 
-            {/* Authentification */}
             {user ? (
               <li className="nav-item dropdown ms-lg-3">
-                <button className="btn btn-outline-dark rounded-pill dropdown-toggle" data-bs-toggle="dropdown">
-                  {user.username || user.first_name || user.email}
+                <button
+                  className={`btn rounded-pill dropdown-toggle ${navBtnClass}`}
+                  type="button"
+                  id="navbarDropdown"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  style={navBtnStyle}
+                >
+                  {displayName}
                 </button>
-                <ul className="dropdown-menu dropdown-menu-end shadow border-0 rounded-4 p-3">
-                  <div className="d-flex align-items-center mb-3 p-2">
-                    <div className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style={{ width: 40, height: 40, fontWeight: 'bold' }}>
-                      {user.email.charAt(0).toUpperCase()}
+                
+                <ul className="dropdown-menu dropdown-menu-end shadow border-0 rounded-0 p-3" aria-labelledby="navbarDropdown">
+                  <div className="d-flex align-items-center mb-3 p-2 bg-light rounded-1">
+                    <div className="text-white rounded-circle d-flex align-items-center justify-content-center"
+                         style={{ width: 35, height: 35, fontWeight: 'bold', backgroundColor: '#c5a059' }}>
+                      {displayInitial}
                     </div>
                     <div className="ms-3">
-                      <div className="fw-bold small">{user.username || user.first_name || 'Utilisateur'}</div>
-                      <div className="text-muted" style={{ fontSize: '11px' }}>{user.email}</div>
+                      <div className="fw-bold small" style={{ fontFamily: 'Playfair Display, serif' }}>{displayName}</div>
+                      <div className="text-muted" style={{ fontSize: '10px' }}>{displayEmail}</div>
                     </div>
                   </div>
 
-                  {/* SI C'EST UN ARTISTE : On affiche les accès de gestion */}
                   {user.role === 'artiste' && (
                     <>
-                      <li><Link className="dropdown-item rounded-3" to="/profile">👤 Mon Profil Artiste</Link></li>
-                      <li><Link className="dropdown-item rounded-3" to="/dashboard">📊 Tableau de bord</Link></li>
+                      <li><Link className="dropdown-item" to="/profile">👤 Mon Profil Artiste</Link></li>
+                      <li><Link className="dropdown-item" to="/artist/dashboard">📊 Tableau de bord</Link></li>
                       <li><hr className="dropdown-divider" /></li>
                     </>
                   )}
 
-                  {/* POUR TOUT LE MONDE : Bouton déconnexion */}
+                  {user.role === 'admin' && (
+                    <>
+                      <li><Link className="dropdown-item admin-link" style={{color: '#c5a059', fontWeight: 'bold'}} to="/admin/dashboard">⚙️ Admin Dashboard</Link></li>
+                      <li><hr className="dropdown-divider" /></li>
+                    </>
+                  )}
+
                   <li>
-                    <button className="dropdown-item text-danger rounded-3" onClick={logout}>
+                    <button className="dropdown-item text-danger fw-bold" onClick={logout}>
                       Se déconnecter
                     </button>
                   </li>
@@ -109,7 +130,7 @@ export default function Navbar() {
             ) : (
               <li className="nav-item ms-lg-3">
                 <Link to="/login">
-                  <button className={`btnconnexion rounded-pill p-2 px-4 ${(isDark || scrolled) ? "btn-dark" : "btn-light"}`}>
+                  <button className={`btnconnexion rounded-pill p-2 px-4 ${scrolled ? "btn-dark" : "btn-light"}`}>
                     Connexion
                   </button>
                 </Link>

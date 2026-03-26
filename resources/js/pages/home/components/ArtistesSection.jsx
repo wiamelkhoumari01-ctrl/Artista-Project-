@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion"; // Import de framer-motion
 
 export default function ArtistesSection() {
   const [artistes, setArtistes] = useState([]);
@@ -21,8 +22,19 @@ export default function ArtistesSection() {
         </div>
 
         <div className="row g-4 justify-content-center">
-          {display.map((a) => (
-            <div key={a.id} className="col-12 col-md-6 col-lg-4">
+          {display.map((a, index) => ( // On récupère l'index pour le délai
+            <motion.div 
+              key={a.id} 
+              className="col-12 col-md-6 col-lg-4"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false }}
+              transition={{ 
+                duration: 0.7, 
+                delay: index * 0.1, // Les cartes s'affichent l'une après l'autre
+                ease: "easeOut"
+              }}
+            >
               <Link
                 to={`/artistes/${a.slug}`}
                 className="art-card d-block position-relative overflow-hidden rounded-4 border-0 shadow-sm"
@@ -40,7 +52,7 @@ export default function ArtistesSection() {
                   <p className="text-white-50 mb-0">{a.specialite}</p>
                 </div>
               </Link>
-            </div>
+            </motion.div>
           ))}
         </div>
 
@@ -55,10 +67,10 @@ export default function ArtistesSection() {
 }
 
 const mockArtistes = [
-  { id: "1", nom_scene: "Anthony Chambaud", specialite: "Peinture Abstraite", photo_url: "/images/Anthony_Chambaud_peinture_abstraite.jpg", slug: "anthony-chambaud" },
-  { id: "2", nom_scene: "Emmanuel Sellier", specialite: "Sculpture Moderne", photo_url: "/images/Emmanuel Sellier_sculpture_moderne.png", slug: "emmanuel-sellier" },
-  { id: "3", nom_scene: "Hannah Reyes Morales", specialite: "Photographie Artistique", photo_url: "/images/Hannah-Reyes-Morales_photographe.jpg", slug: "hannah-reyes-morales" },
-  { id: "4", nom_scene: "Mad Dog Jones", specialite: "Art Numérique", photo_url: "/images/Mad dog jones_art numerique.webp", slug: "mad-dog-jones" },
-  { id: "5", nom_scene: "Karla Ortiz", specialite: "Illustration", photo_url: "/images/Karla Ortiz_illustration.jpg", slug: "karla-ortiz" },
-  { id: "6", nom_scene: "Cecily Brown", specialite: "Art Contemporain", photo_url: "/images/Cecily Brown_art_comtemporain.webp", slug: "cecily-brown" }
+  { id: "1", nom_scene: "Anthony Chambaud", specialite: "Peinture Abstraite", photo_url: "/images/anthony-chambaud-artiste-1.webp", slug: "anthony-chambaud" },
+  { id: "2", nom_scene: "Emmanuel Sellier", specialite: "Sculpture Moderne", photo_url: "/images/emmanuel-sellier-artiste-1.webp", slug: "emmanuel-sellier" },
+  { id: "3", nom_scene: "Hannah Reyes Morales", specialite: "Photographie Artistique", photo_url: "/images/hannah-reyes-morales-artiste-1.webp", slug: "hannah-reyes-morales" },
+  { id: "4", nom_scene: "Mad Dog Jones", specialite: "Art Numérique", photo_url: "/images/mad-dog-jones-artiste-1.webp", slug: "mad-dog-jones" },
+  { id: "5", nom_scene: "Karla Ortiz", specialite: "Illustration", photo_url: "/images/karla-ortiz-artiste-1.webp", slug: "karla-ortiz" },
+  { id: "6", nom_scene: "Cecily Brown", specialite: "Art Contemporain", photo_url: "/images/cecily-brown-artiste-1.webp", slug: "cecily-brown" }
 ];

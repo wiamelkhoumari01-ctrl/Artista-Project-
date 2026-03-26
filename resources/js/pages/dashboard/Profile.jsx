@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../../api'; // Import corrigé
 import { useAuth } from '../../context/AuthContext';
 
 export default function Profile() {
@@ -7,26 +7,20 @@ export default function Profile() {
   const [artistData, setArtistData] = useState(null);
 
   useEffect(() => {
-    // On va chercher les infos spécifiques de l'artiste
     const fetchArtistInfo = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get('http://localhost:8000/api/artist-profile', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const response = await api.get('/api/artist-profile');
         setArtistData(response.data);
       } catch (error) {
         console.error("Erreur profile", error);
       }
     };
-
     if (user?.role === 'artiste') fetchArtistInfo();
   }, [user]);
 
   if (user?.role !== 'artiste') {
     return <div className="container mt-5 pt-5">Accès réservé aux artistes.</div>;
   }
-
   return (
     <div className="container mt-5 pt-5">
       <div className="row">

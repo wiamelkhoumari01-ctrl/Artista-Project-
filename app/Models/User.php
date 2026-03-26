@@ -2,35 +2,28 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens; // Indispensable pour createToken()
 
-class User extends Authenticatable implements
-MustVerifyEmail
+class User extends Authenticatable 
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
+     * Les attributs assignables en masse.
      */
-    protected $fillable = ['email', 'password', 'role', 'language_id'];
+    protected $fillable = [
+        'email', 
+        'password', 
+        'role', // admin, artiste, utilisateur
+        'language_id',
+        'email_verified_at'
+    ];
 
-    public function language() {
-        return $this->belongsTo(Language::class);
-    }
-
-    public function artist() {
-        return $this->hasOne(Artist::class);
-    }
     /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
+     * Les attributs cachés pour les réponses API.
      */
     protected $hidden = [
         'password',
@@ -38,9 +31,7 @@ MustVerifyEmail
     ];
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * Typage automatique des colonnes (Casting).
      */
     protected function casts(): array
     {
@@ -48,5 +39,41 @@ MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // --- RELATIONS ---
+
+    /**
+     * Relation avec la table des langues.
+     */
+    public function language() 
+    {
+        return $this->belongsTo(Language::class);
+    }
+
+    /**
+     * Relation avec le profil d'artiste (uniquement si role === 'artiste').
+     */
+    public function artist() 
+    {
+        return $this->hasOne(Artist::class);
+    }
+
+    // --- HELPER METHODS (Utiles pour ton frontend React) ---
+
+    /**
+     * Vérifie si l'utilisateur est un administrateur.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Vérifie si l'utilisateur est un artiste.
+     */
+    public function isArtist(): bool
+    {
+        return $this->role === 'artiste';
     }
 }

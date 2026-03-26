@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../../api'; // Utilisation de l'instance configurée
+import { Link } from 'react-router-dom';
 
 export default function ForgotPassword() {
     const [email, setEmail] = useState('');
@@ -14,7 +15,8 @@ export default function ForgotPassword() {
         setError('');
 
         try {
-            const response = await axios.post('http://localhost:8000/api/forgot-password', { email });
+            // Utilisation de api.post pour la cohérence
+            const response = await api.post('/api/forgot-password', { email });
             setMessage(response.data.message);
         } catch (err) {
             setError(err.response?.data?.message || "Une erreur est survenue");
@@ -24,33 +26,37 @@ export default function ForgotPassword() {
     };
 
     return (
-        <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: '80vh' }}>
-            <div className="card p-4 shadow-sm border-0 rounded-4" style={{ maxWidth: '400px', width: '100%' }}>
-                <h2 className="fw-bold mb-3 text-center">Mot de passe oublié</h2>
-                <p className="text-muted text-center small mb-4">
-                    Entrez votre email pour recevoir un lien de réinitialisation.
-                </p>
+        <div className="login-container" style={{ minHeight: '80vh', display: 'flex', alignItems: 'center' }}>
+            <main className="login-card w-100" style={{ maxWidth: '450px' }}>
+                <header className="text-center mb-4">
+                    <h1 className="title" style={{ fontSize: '1.8rem' }}>Mot de passe oublié</h1>
+                    <p className="subtitle">Entrez votre email pour recevoir un lien.</p>
+                </header>
 
-                {message && <div className="alert alert-success small">{message}</div>}
-                {error && <div className="alert alert-danger small">{error}</div>}
+                {message && <div className="alert alert-success p-2 small text-center rounded-pill">{message}</div>}
+                {error && <div className="alert alert-danger p-2 small text-center rounded-pill">{error}</div>}
 
-                <form onSubmit={handleSubmit}>
+                <form className="login-form" onSubmit={handleSubmit}>
                     <div className="mb-4">
-                        <label className="form-label small fw-bold">Email</label>
+                        <label className="form-label-custom">Email</label>
                         <input 
                             type="email" 
-                            className="form-control rounded-pill" 
+                            className="form-control-pill" 
                             placeholder="exemple@gmail.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required 
                         />
                     </div>
-                    <button type="submit" className="btn btn-dark w-100 rounded-pill py-2" disabled={loading}>
+                    <button type="submit" className="btn-primary-pill w-100" disabled={loading}>
                         {loading ? 'Envoi en cours...' : 'Envoyer le lien'}
                     </button>
                 </form>
-            </div>
+
+                <div className="text-center mt-4">
+                    <Link to="/login" className="signup-link">Retour à la connexion</Link>
+                </div>
+            </main>
         </div>
     );
 }

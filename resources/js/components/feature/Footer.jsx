@@ -8,8 +8,6 @@ export default function Footer() {
           
           <div className="col-lg-4 col-md-6 mb-4">
             <div className="footer-brand mb-3">
-  
-              <img src="/images/logo_art.png" alt="Logo Artiste" className="footer-logo" />
               <span className="brand-name">ARTISTA.</span>
             </div>
             <p className="description">
@@ -20,7 +18,7 @@ export default function Footer() {
                 href="https://www.facebook.com/profile.php?id=61584894126989" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="social-link"
+                className="social-link"    
               >
                 <i className="fab fa-facebook-f"></i>
               </a>

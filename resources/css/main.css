@@ -66,15 +66,10 @@ a, .nav-link, .btn, .btnconnexion, .btn-artiste, .btn-suivant, .art-card, .hero-
 .nav-link {
     transition: var(--transition-smooth);
     font-weight: 500;
-    font-size: 10px;
+    font-size: 15px;
     color: inherit; /* Permet aux classes parentes de gérer la couleur de base */
 }
 
-/* 🟢 CORRECTION ICI : Le survol rouge doit être prioritaire partout */
-.nav-link:hover, 
-.nav-link.active {
-    color: var(--accent-red) !important; 
-}
 
 /* Mode Clair (sur le Hero) */
 .navbar-light-mode .nav-link, 
@@ -94,11 +89,12 @@ a, .nav-link, .btn, .btnconnexion, .btn-artiste, .btn-suivant, .art-card, .hero-
     top: 0;
     left: 0;
     width: 100%;
-    background-color: rgba(246, 239, 230, 0.8);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     transition: var(--transition-smooth);
+    background-color:#f6efe6 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     z-index: 1000;
 }
 
@@ -148,27 +144,29 @@ a, .nav-link, .btn, .btnconnexion, .btn-artiste, .btn-suivant, .art-card, .hero-
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #ffffff;
+    background-color: #ffffff !important; /* Force le blanc */
     color: #000000 !important;
     font-weight: 500;
-    border: none;
+    border: 1px solid rgba(0,0,0,0.1); /* Petite bordure pour qu'il soit beau sur le beige */
     border-radius: 50px; 
     padding: 8px 25px;
     font-size: 17px;
-    line-height: 2;
     transition: var(--transition-smooth);
-    margin-left: 15px; /* Espace entre les liens et le bouton */
 }
 
 .btnconnexion:hover {
-    background-color: #f8f9fa;
+    background-color: #f8f9fa !important; /* Un blanc un peu plus gris au survol */
     transform: scale(1.05);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     color: #000000 !important;
 }
 
 .hero-nav.scrolled .btnconnexion {
     background-color: #000 !important;
+    color: #fff !important;
+    border: none;
+}
+.hero-nav.scrolled .btnconnexion:hover {
+    background-color: #333 !important; /* Noir plus clair au survol */
     color: #fff !important;
 }
 .lang-select-nav {
@@ -270,6 +268,72 @@ a, .nav-link, .btn, .btnconnexion, .btn-artiste, .btn-suivant, .art-card, .hero-
     animation: hero-bounce 2s infinite;
     transition: var(--transition-smooth);
 }
+/* Style spécifique pour le lien Admin dans le dropdown */
+.dropdown-item.admin-link {
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espace entre l'icône et le texte */
+}
+
+
+/* Dans ton fichier .css */
+#navbarDropdown {
+    color: white !important;
+}/* Effet au survol : on inverse les couleurs pour l'Admin */
+.dropdown-item.admin-link:hover {
+    background-color: #ffffff !important; /* Ton Artista Gold */
+    color: #4a3939 !important;
+    transform: translateX(5px); /* Petit décalage vers la droite pour le dynamisme */
+}
+/* Ajustement du sélecteur de langue pour qu'il soit élégant */
+.lang-select-nav {
+    background: transparent;
+    border: 1px solid rgba(197, 160, 89, 0.5); /* Bordure dorée semi-transparente */
+    color: inherit;
+    border-radius: 20px;
+    padding: 2px 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    outline: none;
+    transition: 0.3s;
+}
+
+.lang-select-nav:hover {
+    border-color: #c5a059;
+}
+
+/* Mode Clair (utilisé sur le Hero sombre de l'Accueil et Événements) */
+/* On veut du BLANC pour que ça ressorte sur l'image */
+.navbar-light-mode .nav-link, 
+.navbar-light-mode .nomlogo { 
+    color: #ffffff !important; 
+}
+
+/* Mode Sombre (utilisé sur les pages à fond clair comme Artistes, Login, Inscription) */
+/* On veut du NOIR */
+.navbar-dark-mode .nav-link, 
+.navbar-dark-mode .nomlogo { 
+    color: #000000 !important; 
+}
+
+/* On s'assure que le sélecteur de langue suit aussi */
+.navbar-light-mode .lang-select-nav { color: white; border-color: white; }
+.navbar-dark-mode .lang-select-nav { color: black; border-color: black; }
+
+
+
+/* Style du bouton de profil (dropdown toggle) */
+.btn-outline-dark.rounded-pill {
+    border-color: #c5a059;
+    color: inherit;
+}
+
+.btn-outline-dark.rounded-pill:hover {
+    background-color: #c5a059;
+    border-color: #c5a059;
+    color: white;
+}
 
 @keyframes hero-bounce {
     0%, 100% { transform: translateX(-50%) translateY(0); }
@@ -322,7 +386,7 @@ a, .nav-link, .btn, .btnconnexion, .btn-artiste, .btn-suivant, .art-card, .hero-
         border-color: var(--brown) !important;
         font-size: 1rem;
         padding: 5px 15px;
-    }
+    }      
 
     .nav-connexion-mobile { border-top: 1px solid rgba(140, 106, 74, 0.2); margin-top: 10px; }
     .navbar-toggler { border-color: rgba(81, 80, 80, 0.5); background-color: rgba(0, 0, 0, 0.1); }
@@ -333,3 +397,8 @@ a, .nav-link, .btn, .btnconnexion, .btn-artiste, .btn-suivant, .art-card, .hero-
 }
 
 .bg-beige-light { background-color: var(--beige-light) !important; }
+
+.nav-link:hover, 
+.nav-link.active {
+    color: var(--accent-red) !important; 
+}

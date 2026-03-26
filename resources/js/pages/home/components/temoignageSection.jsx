@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from "framer-motion";
 
 const Temoignage = [
   {
@@ -60,7 +61,10 @@ export default function TemoignageSection(){
         
         <div className="temoignage-grid">
           {Temoignage.map((t, index) => (
-            <div key={index} className={`temoignage-card ${t.lang === 'ar' ? 'rtl-card' : ''}`}>
+              <motion.div initial={{ opacity: 0, x: -20 }} 
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: false }} 
+                  transition={{ duration: 0.5, delay: index * 0.1 }} key={index} className={`temoignage-card ${t.lang === 'ar' ? 'rtl-card' : ''}`}>
               <div className="temoignage-header">
                 <div className="user-avatar" style={{ backgroundColor: t.bgColor }}>
                   {t.initials}
@@ -76,7 +80,7 @@ export default function TemoignageSection(){
                   <i key={i} className="fas fa-star"></i>
                 ))}
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

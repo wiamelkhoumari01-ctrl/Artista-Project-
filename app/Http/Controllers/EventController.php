@@ -10,34 +10,44 @@ class EventController extends Controller
 {
     public function index(Request $request)
     {
-        $locale = $request->query('locale', 'fr'); // Langue par défaut
-        $type = $request->query('type', 'Tous'); // Filtre de catégorie
+        // Nettoyage de la locale et du type
+        $locale = strtolower($request->query('locale', 'fr')); 
+        $type = $request->query('type', 'Tous');
+        
+        Carbon::setLocale($locale);
 
-        $query = Event::with(['translations' => function($q) use ($locale) {
-            $q->where('locale', $locale);
-        }, 'artists.translations' => function($q) use ($locale) {
-            $q->where('locale', $locale);
-        }]);
+        $query = Event::query();
 
-        // Filtrage dynamique selon la pilule cliquée
+        // Filtrage par type
         if ($type !== 'Tous') {
-            $query->where('type', $type);
+            $searchType = ($type === 'Expositions') ? 'Exposition' : $type;
+            $query->where('type', $searchType);
         }
 
-        // Tri chronologique précis grâce au format dateTime
-        $events = $query->orderBy('start_date', 'asc')->get();
+        // Récupération des événements avec leurs artistes et les traductions d'artistes
+        // On trie par date de début
+        $events = $query->with(['artists.artist_translations'])->orderBy('start_date', 'asc')->get();
 
         return response()->json($events->map(function($event) use ($locale) {
-            $trans = $event->translations->first();
-            $artist = $event->artists->first();
-            $artTrans = $artist ? $artist->translations->where('locale', $locale)->first() : null;
+            // 1. Traduction de l'événement (Titre, Lieu, etc.)
+            $translation = $event->translate($locale);
+
+            // 2. Récupération de TOUS les artistes participants (pour éviter les doublons de cartes)
+            $participants = $event->artists->map(function($artist) use ($locale) {
+                $aTrans = $artist->translate($locale);
+                if ($aTrans) {
+                    return $aTrans->stage_name ?: ($aTrans->first_name . ' ' . $aTrans->last_name);
+                }
+                return 'Artiste inconnu';
+            })->unique()->implode(', '); // On joint les noms par une virgule
 
             return [
                 'id' => $event->id,
-                'title' => $trans->title ?? 'Untitled',
-                'description' => $trans->description ?? '',
-                'venue' => $trans->venue_name ?? '',
-                'artist_name' => $artTrans ? ($artTrans->first_name . ' ' . $artTrans->last_name) : 'Artiste Artista',
+                'title' => $translation->title ?? 'Untitled',
+                'description' => $translation->description ?? '',
+                'venue' => $translation->venue_name ?? 'Lieu à confirmer',
+                'type' => $event->type,
+                'participants' => $participants, // Liste groupée des artistes
                 'start_date' => Carbon::parse($event->start_date)->translatedFormat('d F Y'),
                 'end_date' => Carbon::parse($event->end_date)->translatedFormat('d F Y'),
                 'status' => $this->calculateStatus($event->start_date, $event->end_date)
@@ -48,8 +58,15 @@ class EventController extends Controller
     private function calculateStatus($start, $end)
     {
         $now = now();
-        if ($now < $start) return ['label' => 'À venir', 'class' => 'st-upcoming'];
-        if ($now > $end) return ['label' => 'Passé', 'class' => 'st-past'];
+        $startDate = Carbon::parse($start);
+        $endDate = Carbon::parse($end);
+
+        if ($now < $startDate) {
+            return ['label' => 'À venir', 'class' => 'st-upcoming'];
+        }
+        if ($now > $endDate) {
+            return ['label' => 'Terminé', 'class' => 'st-past'];
+        }
         return ['label' => 'En cours', 'class' => 'st-current'];
     }
 }

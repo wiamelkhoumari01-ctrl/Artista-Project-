@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('artists', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('category_id')->nullable()->constrained()->onDelete('set null');
             $table->string('image_url')->nullable();
             $table->string('phone')->nullable();
             $table->string('country')->nullable();
