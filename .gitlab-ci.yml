@@ -2,10 +2,10 @@ stages:
   - build
   - sonarqube
 
-# Étape 1 : On vérifie que le projet build correctement (NPM + Composer)
+# Étape 1 : Build avec la bonne version de Node
 build_project:
   stage: build
-  image: node:18
+  image: node:22  # <-- On passe de 18 à 22 pour satisfaire Vite
   script:
     - npm install
     - npm run build
@@ -14,15 +14,15 @@ build_project:
       - public/build/
     expire_in: 48 hours
 
-# Étape 2 : Analyse SonarCloud
+# Étape 2 : Analyse SonarCloud (On ne change rien ici)
 sonarqube-check:
   stage: sonarqube
   image: 
     name: sonarsource/sonar-scanner-cli:latest
     entrypoint: [""]
   variables:
-    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Cache pour accélérer les prochaines analyses
-    GIT_DEPTH: "0"  # Indispensable pour que Sonar lise tout l'historique
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+    GIT_DEPTH: "0"
   cache:
     key: "${CI_JOB_NAME}"
     paths:
@@ -30,4 +30,4 @@ sonarqube-check:
   script: 
     - sonar-scanner
   only:
-    - main # L'analyse se lance uniquement sur ta branche main
+    - main
