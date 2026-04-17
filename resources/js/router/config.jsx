@@ -14,7 +14,7 @@ import NotFound from '../pages/NotFound.jsx';
 
 // Dashboards et Sécurité
 import PrivateRoute from '../pages/connexion/PrivateRoute.jsx';
-import Profile from '../pages/Dashboard/ProfileT.jsxx';
+import Profile from '../pages/Dashboard/ProfileT.jsx';
 import Dashboard from '../pages/Dashboard/ArtistDashboard.jsx';
 import AdminDashboard from '../pages/admin/AdminDashboard.jsx';
 import AdminKpis from '../pages/admin/AdminKpis.jsx';
