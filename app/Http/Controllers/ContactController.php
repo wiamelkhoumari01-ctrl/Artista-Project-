@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use App\Mail\ContactMessage;
 
 class ContactController extends Controller
 {
@@ -14,12 +17,13 @@ class ContactController extends Controller
     ]);
 
     try {
-        // Envoi immédiat à ton adresse
-        \Illuminate\Support\Facades\Mail::to('wiamelkhoumari01@gmail.com')
-            ->send(new \App\Mail\ContactMessage($validated));
+        Mail::to(config('mail.from.address'))
+            ->send(new ContactMessage($validated));
 
         return response()->json(['success' => true, 'message' => 'Message envoyé avec succès !']);
     } catch (\Exception $e) {
+       
+        Log::error("Erreur envoi mail : " . $e->getMessage());
         return response()->json(['success' => false, 'message' => 'Erreur technique.'], 500);
     }
 }

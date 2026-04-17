@@ -1,34 +1,36 @@
 /* ==========================================================================
-   1. RESET & VARIABLES
+   ARTISTA — main.css
+   Version finale optimisée : doublons supprimés, priorités clarifiées
    ========================================================================== */
-:root { 
-    --beige-light: #f4ece4;
-    --brown: #8c6a4a;
-    --accent-orange: #ff6b4a; 
-    --accent-red: #ff0000;    
-    --transition-smooth: all 0.3s ease;
+
+/* ── Variables ── */
+:root {
+    --beige-light:       #f4ece4;
+    --brown:             #8c6a4a;
+    --accent-or:         #c5a059;
+    --accent-rouge:      #ff0000;
+    --transition-douce:  all 0.3s ease;
 }
 
-* {
+/* ── Reset ── */
+*, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body {
-    padding-top: 0;
-}
+body { padding-top: 0; }
 
-/* Suppression globale du trait bleu/soulignement forcé par Bootstrap */
-a, .nav-link, .btn, .btnconnexion, .btn-artiste, .btn-suivant, .art-card, .hero-scroll-btn {
-    text-decoration: none !important; 
+.Art { font-size: 120px; font-family: f; }
+
+/* Suppression globale des soulignements et bordures Bootstrap */
+a, .nav-link, .btn, .btnconnexion, .btn-artiste, .art-card {
+    text-decoration: none !important;
     outline: none !important;
     box-shadow: none !important;
 }
 
-/* ==========================================================================
-   2. STRUCTURE GLOBALE (Layout)
-   ========================================================================== */
+/* ── Layout global ── */
 .app-wrapper {
     display: flex;
     flex-direction: column;
@@ -40,50 +42,43 @@ a, .nav-link, .btn, .btnconnexion, .btn-artiste, .btn-suivant, .art-card, .hero-
     padding-top: 0;
 }
 
-.page-container,
-.navbar-dark-mode + main .content-area {
+.page-container {
     padding-top: 80px;
 }
 
-@keyframes fadeIn {
+@keyframes apparition {
     from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 .content-area > section {
-    animation: fadeIn 0.8s ease-in-out;
+    animation: apparition 0.8s ease-in-out;
 }
 
-/* ==========================================================================
-   3. NAVIGATION (Navbar & Links)
-   ========================================================================== */
+/* ── Navbar ── */
 .nomlogo { font-size: 110%; }
 
-.navbar-nav {
-    align-items: center; /* Centre verticalement les liens et le bouton */
-}
+.navbar-nav { align-items: center; }
 
 .nav-link {
-    transition: var(--transition-smooth);
+    transition: var(--transition-douce);
     font-weight: 500;
     font-size: 15px;
-    color: inherit; /* Permet aux classes parentes de gérer la couleur de base */
+    color: inherit;
 }
 
-
-/* Mode Clair (sur le Hero) */
-.navbar-light-mode .nav-link, 
-.navbar-light-mode .nomlogo { 
-    color: #ffffff; /* Retrait du !important ici */
+/* Couleurs selon le mode de la navbar */
+.navbar-light-mode .nav-link,
+.navbar-light-mode .nomlogo {
+    color: #ffffff !important;
 }
 
-/* Mode Sombre (Pages internes) */
-.navbar-dark-mode .nav-link, 
-.navbar-dark-mode .nomlogo { 
-    color: #000000; 
+.navbar-dark-mode .nav-link,
+.navbar-dark-mode .nomlogo {
+    color: #000000 !important;
 }
 
-/* Navbar après Scroll */
+/* Navbar après scroll — priorité maximale */
 .hero-nav.scrolled {
     position: sticky;
     top: 0;
@@ -92,83 +87,127 @@ a, .nav-link, .btn, .btnconnexion, .btn-artiste, .btn-suivant, .art-card, .hero-
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    transition: var(--transition-smooth);
-    background-color:#f6efe6 !important;
+    background-color: #f6efe6 !important;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
     z-index: 1000;
+    transition: var(--transition-douce);
 }
 
 .hero-nav.scrolled .nav-link,
-.hero-nav.scrolled .nomlogo { 
-    color: #000 !important; 
+.hero-nav.scrolled .nomlogo {
+    color: #000 !important;
 }
 
-/* Ré-insister sur le rouge quand on a scrollé */
-.hero-nav.scrolled .nav-link:hover { 
-    color: var(--accent-red) !important; 
+/* Hover des liens — une seule règle, rouge dans tous les cas */
+.nav-link:hover,
+.nav-link.active,
+.hero-nav.scrolled .nav-link:hover {
+    color: var(--accent-rouge) !important;
 }
 
-/* Dropdown User */
+/* ── Sélecteur de langue ── */
+.lang-select-nav {
+    background: transparent;
+    border: 1px solid rgba(197, 160, 89, 0.5);
+    color: inherit;
+    border-radius: 20px;
+    padding: 2px 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    outline: none;
+    transition: 0.3s;
+}
+
+.lang-select-nav:hover { border-color: #c5a059; }
+.lang-select-nav option { color: black; }
+
+.navbar-light-mode .lang-select-nav { color: white; border-color: white; }
+.navbar-dark-mode  .lang-select-nav { color: black; border-color: black; }
+
+/* ── Dropdown profil ── */
 .dropdown-toggle {
     font-weight: 500;
     border: 1.5px solid currentColor;
-    transition: var(--transition-smooth);
+    transition: var(--transition-douce);
 }
 
 .dropdown-menu {
-    background-color: #fcfbf9 !important; /* Beige très clair et luxueux */
-    border-radius: 20px !important; /* Coins très arrondis */
-    border: 1px solid rgba(197, 160, 89, 0.2) !important; /* Bordure dorée très subtile */
-    box-shadow: 0 15px 35px rgba(0,0,0,0.08) !important;
+    background-color: #fcfbf9 !important;
+    border-radius: 20px !important;
+    border: 1px solid rgba(197, 160, 89, 0.2) !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08) !important;
     padding: 12px !important;
     margin-top: 15px !important;
     min-width: 240px;
-    animation: dropdownFade 0.3s ease-out;
+    animation: fonduDropdown 0.3s ease-out;
 }
+
 .dropdown-menu .bg-light {
-    background-color: #f6efe6 !important; /* Ton beige-light défini dans tes variables */
+    background-color: #f6efe6 !important;
     border-radius: 12px !important;
     margin-bottom: 10px !important;
 }
+
 .dropdown-item {
     border-radius: 10px !important;
     padding: 10px 15px !important;
     font-size: 14px;
     font-weight: 500;
-    color: #4a3939 !important; /* Brun foncé pour la lisibilité */
+    color: #4a3939 !important;
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
     gap: 10px;
 }
-/* État Hover (Survol) */
+
 .dropdown-item:hover {
-    background-color: #c5a059 !important; /* Couleur dorée au survol */
-    color: #ffffff !important; /* Texte blanc au survol */
+    background-color: #c5a059 !important;
+    color: #ffffff !important;
     transform: translateX(5px);
 }
 
-/* ==========================================================================
-   4. BOUTONS
-   ========================================================================== */
+.dropdown-item.admin-link {
+    color: #c5a059 !important;
+    font-weight: bold;
+}
 
-/* Bouton Connexion */
+.dropdown-item.admin-link:hover {
+    background-color: #c5a059 !important;
+    color: white !important;
+}
+
+.dropdown-item.text-danger:hover {
+    background-color: #ff6b4a !important;
+    color: #ffffff !important;
+}
+
+.dropdown-divider {
+    border-top: 1px solid rgba(197, 160, 89, 0.1) !important;
+    margin: 8px 0 !important;
+}
+
+@keyframes fonduDropdown {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Bouton Connexion ── */
 .btnconnexion {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #ffffff !important; /* Force le blanc */
+    background-color: #ffffff !important;
     color: #000000 !important;
     font-weight: 500;
-    border: 1px solid rgba(0,0,0,0.1); /* Petite bordure pour qu'il soit beau sur le beige */
-    border-radius: 50px; 
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50px;
     padding: 8px 25px;
     font-size: 17px;
-    transition: var(--transition-smooth);
+    transition: var(--transition-douce);
 }
 
 .btnconnexion:hover {
-    background-color: #f8f9fa !important; /* Un blanc un peu plus gris au survol */
+    background-color: #f8f9fa !important;
     transform: scale(1.05);
     color: #000000 !important;
 }
@@ -178,32 +217,25 @@ a, .nav-link, .btn, .btnconnexion, .btn-artiste, .btn-suivant, .art-card, .hero-
     color: #fff !important;
     border: none;
 }
+
 .hero-nav.scrolled .btnconnexion:hover {
-    background-color: #333 !important; /* Noir plus clair au survol */
+    background-color: #333 !important;
     color: #fff !important;
 }
-.lang-select-nav {
-    background: transparent;
-    border: 1px solid rgba(128, 128, 128, 0.3);
-    color: inherit; /* Prend le blanc ou le noir de la nav */
-    border-radius: 20px;
-    padding: 2px 10px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    outline: none;
+
+/* ── Bouton profil (rounded-pill) ── */
+.btn-outline-dark.rounded-pill {
+    border-color: #c5a059;
+    color: inherit;
 }
 
-.navbar-light-mode:not(.scrolled) .lang-select-nav {
+.btn-outline-dark.rounded-pill:hover {
+    background-color: #c5a059;
+    border-color: #c5a059;
     color: white;
-    border-color: rgba(255, 255, 255, 0.5);
 }
 
-.lang-select-nav option {
-    color: black; /* Pour que les options soient lisibles dans le menu déroulant */
-}
-
-/* Bouton Artiste */
+/* ── Bouton Artiste (CTA hero) ── */
 .btn.btn-artiste {
     display: inline-flex;
     align-items: center;
@@ -212,7 +244,7 @@ a, .nav-link, .btn, .btnconnexion, .btn-artiste, .btn-suivant, .art-card, .hero-
     border-radius: 100px;
     font-weight: 644;
     padding: 11px 28px 11px 35px !important;
-    transition: var(--transition-smooth);
+    transition: var(--transition-douce);
 }
 
 .btn-artiste .fleche {
@@ -229,18 +261,10 @@ a, .nav-link, .btn, .btnconnexion, .btn-artiste, .btn-suivant, .art-card, .hero-
     transition: transform 0.3s ease;
 }
 
-.btn-artiste:hover {
-    background-color: #f8f9fa;
-    transform: scale(1.05);
-}
-
+.btn-artiste:hover { background-color: #f8f9fa; transform: scale(1.05); }
 .btn-artiste:hover .fleche { transform: translateX(5px); }
 
-/* ==========================================================================
-   5. SECTIONS (Hero & Art Cards)
-   ========================================================================== */
-.Art { font-size: 120px; font-family: f; }
-
+/* ── Hero section ── */
 #bas { scroll-margin-top: 90px; }
 
 .hero-section { position: relative; overflow: hidden; }
@@ -259,131 +283,67 @@ a, .nav-link, .btn, .btnconnexion, .btn-artiste, .btn-suivant, .art-card, .hero-
 .hero-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.45));
+    background: linear-gradient(180deg,
+        rgba(0, 0, 0, 0.45),
+        rgba(0, 0, 0, 0.35) 50%,
+        rgba(0, 0, 0, 0.45));
     z-index: 1;
 }
 
-/* Style spécifique pour le lien Admin dans le dropdown */
-.dropdown-item.admin-link {
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px; /* Espace entre l'icône et le texte */
+/* ── Art Cards ── */
+.art-card {
+    height: 360px;
+    display: block;
+    border-radius: 1.5rem !important;
+    overflow: hidden;
 }
 
-
-/* Dans ton fichier .css */
-#navbarDropdown {
-    color: white !important;
-}/* Effet au survol : on inverse les couleurs pour l'Admin */
-.dropdown-item.admin-link:hover {
-    background-color: #ffffff !important; /* Ton Artista Gold */
-    color: #4a3939 !important;
-    transform: translateX(3px); /* Petit décalage vers la droite pour le dynamisme */
-}
-.dropdown-item.text-danger:hover {
-    background-color: #ff6b4a !important; /* Orange/Rouge de ta palette */
-    color: #ffffff !important;
+.art-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .6s ease;
 }
 
-/* Style de la barre de séparation */
-.dropdown-divider {
-    border-top: 1px solid rgba(197, 160, 89, 0.1) !important;
-    margin: 8px 0 !important;
-}
-.dropdown-item.admin-link:hover {
-    background-color: #c5a059 !important;
-    color: white !important;
-}
-
-@keyframes dropdownFade {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-
-/* Ajustement du sélecteur de langue pour qu'il soit élégant */
-.lang-select-nav {
-    background: transparent;
-    border: 1px solid rgba(197, 160, 89, 0.5); /* Bordure dorée semi-transparente */
-    color: inherit;
-    border-radius: 20px;
-    padding: 2px 8px;
-    font-size: 0.85rem;
-    cursor: pointer;
-    outline: none;
-    transition: 0.3s;
-}
-
-.lang-select-nav:hover {
-    border-color: #c5a059;
-}
-
-/* Mode Clair (utilisé sur le Hero sombre de l'Accueil et Événements) */
-/* On veut du BLANC pour que ça ressorte sur l'image */
-.navbar-light-mode .nav-link, 
-.navbar-light-mode .nomlogo { 
-    color: #ffffff !important; 
-}
-
-/* Mode Sombre (utilisé sur les pages à fond clair comme Artistes, Login, Inscription) */
-/* On veut du NOIR */
-.navbar-dark-mode .nav-link, 
-.navbar-dark-mode .nomlogo { 
-    color: #000000 !important; 
-}
-
-/* On s'assure que le sélecteur de langue suit aussi */
-.navbar-light-mode .lang-select-nav { color: white; border-color: white; }
-.navbar-dark-mode .lang-select-nav { color: black; border-color: black; }
-
-
-
-/* Style du bouton de profil (dropdown toggle) */
-.btn-outline-dark.rounded-pill {
-    border-color: #c5a059;
-    color: inherit;
-}
-
-.btn-outline-dark.rounded-pill:hover {
-    background-color: #c5a059;
-    border-color: #c5a059;
-    color: white;
-}
-
-@keyframes hero-bounce {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(8px); }
-}
-
-/* Art Cards */
-.art-card { height: 360px; display: block; border-radius: 1.5rem !important; overflow: hidden; }
-.art-card img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
 .art-card:hover img { transform: scale(1.07); }
 
 .card-gradient {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.15) 45%, transparent);
+    background: linear-gradient(to top,
+        rgba(0, 0, 0, 0.7),
+        rgba(0, 0, 0, 0.15) 45%,
+        transparent);
     z-index: 1;
 }
 
-.card-info { position: absolute; bottom: 0; left: 0; right: 0; z-index: 2; }
+.card-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+}
 
+/* ── Utilitaires ── */
+.bg-beige-light { background-color: var(--beige-light) !important; }
+.texte          { font-family: 'Playfair Display', serif; }
 
-/* ==========================================================================
-   6. RESPONSIVE & MOBILE
-   ========================================================================== */
+/* ── Responsive ── */
+@media (min-width: 992px) {
+    .art-card { height: 420px; }
+}
+
 @media (max-width: 991px) {
     .page-container { padding-top: 70px; }
-    
+
     .navbar-collapse {
         background-color: rgba(246, 239, 230, 0.95);
         backdrop-filter: blur(10px);
         border-radius: 15px;
         margin-top: 15px;
         padding: 20px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         text-align: center;
     }
 
@@ -394,7 +354,6 @@ a, .nav-link, .btn, .btnconnexion, .btn-artiste, .btn-suivant, .art-card, .hero-
         font-weight: 600;
     }
 
-    /* Responsivité du select langue en mode mobile */
     .lang-select-nav {
         margin: 10px auto;
         display: block;
@@ -403,23 +362,10 @@ a, .nav-link, .btn, .btnconnexion, .btn-artiste, .btn-suivant, .art-card, .hero-
         border-color: var(--brown) !important;
         font-size: 1rem;
         padding: 5px 15px;
-    }      
+    }
 
-    .nav-connexion-mobile { border-top: 1px solid rgba(140, 106, 74, 0.2); margin-top: 10px; }
-    .navbar-toggler { border-color: rgba(81, 80, 80, 0.5); background-color: rgba(0, 0, 0, 0.1); }
-}
-.texte{
-
-    font-family: 'Playfair Display', serif;
-}
-
-@media (min-width: 992px) {
-    .art-card { height: 420px; }
-}
-
-.bg-beige-light { background-color: var(--beige-light) !important; }
-
-.nav-link:hover, 
-.nav-link.active {
-    color: var(--accent-red) !important; 
+    .navbar-toggler {
+        border-color: rgba(81, 80, 80, 0.5);
+        background-color: rgba(0, 0, 0, 0.1);
+    }
 }

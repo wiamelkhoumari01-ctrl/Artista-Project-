@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        // Nettoyage complet dans le bon ordre
+        
         DB::table('artist_event')->truncate();
         DB::table('artist_stats')->truncate();
         DB::table('artwork_images')->truncate();
@@ -23,23 +23,22 @@ class DatabaseSeeder extends Seeder
         DB::table('categories')->truncate();
         DB::table('personal_access_tokens')->truncate();
         User::truncate();
+        
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
-        // 1. Admin
+        // Utilisation des variables d'environnement
         User::create([
-            'first_name'        => 'Admin',
-            'last_name'         => 'Artista',
-            'email'             => 'admin@artista.com',
-            'password'          => Hash::make('0azerty321'),
+            'first_name'        => env('ADMIN_FIRST_NAME', 'Admin'),
+            'last_name'         => env('ADMIN_LAST_NAME', 'Artista'),
+            'email'             => env('ADMIN_EMAIL', 'admin@artista.com'),
+            'password'          => Hash::make(env('ADMIN_PASSWORD', '0azerty321')),
             'role'              => 'admin',
             'locale'            => 'fr',
             'email_verified_at' => now(),
         ]);
 
-        // 2. Utilisateurs lambda
         User::factory(20)->create();
 
-        // 3. Artistes mock + events
         $this->call([
             ArtistMockSeeder::class,
             ArtistStatsSeeder::class,

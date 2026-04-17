@@ -24,7 +24,7 @@ export default function HeroSection() {
       <div className="hero-overlay"></div>
 
       <div className="container text-center text-white position-relative" style={{ zIndex: 2 }}>
-        <h1 className="Art display-1 fw-light fst-italic mb-0">{t('hero.giant_text')}</h1>
+        <h1 className="Art display-2 fw-light fst-italic mb-0">{t('hero.giant_text')}</h1>
         <h2 className="display-2 fw-bold mb-4">{t('hero.main_title')}</h2>
         
         <p className="lead mb-5 mx-auto" style={{ maxWidth: '700px' }}>
