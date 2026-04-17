@@ -1,0 +1,33 @@
+stages:
+  - build
+  - sonarqube
+
+# Étape 1 : On vérifie que le projet build correctement (NPM + Composer)
+build_project:
+  stage: build
+  image: node:18
+  script:
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - public/build/
+    expire_in: 48 hours
+
+# Étape 2 : Analyse SonarCloud
+sonarqube-check:
+  stage: sonarqube
+  image: 
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Cache pour accélérer les prochaines analyses
+    GIT_DEPTH: "0"  # Indispensable pour que Sonar lise tout l'historique
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script: 
+    - sonar-scanner
+  only:
+    - main # L'analyse se lance uniquement sur ta branche main
