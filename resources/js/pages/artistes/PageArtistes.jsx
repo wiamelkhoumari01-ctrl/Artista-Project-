@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import api from "../../api"; 
 import { useLanguage } from "../../context/LanguageContext";
 import SearchBar from "../../components/ui/SearchBar";
@@ -9,16 +9,16 @@ import "../../../css/artists.css";
 const categories = ["Tous", "Peinture Abstraite", "Sculpture Moderne", "Photographie Artistique", "Art Numérique", "Illustration", "Art Contemporain"];
 
 export default function PageArtistes() {
-  const { locale } = useLanguage();
+  const { locale, t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("Tous");
   const [dbArtistes, setDbArtistes] = useState([]);
   const [filteredArtistes, setFilteredArtistes] = useState([]);
-  const [loading, setLoading] = useState(true); // Ajout de l'état loading
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchArtistes = async () => {
-      setLoading(true); // On commence le chargement
+      setLoading(true);
       try {
         const response = await api.get(`/api/artists?lang=${locale}`);
         const formatted = response.data.map(a => ({
@@ -33,7 +33,7 @@ export default function PageArtistes() {
       } catch (error) {
         console.error("Erreur API:", error);
       } finally {
-        setLoading(false); // Fin du chargement
+        setLoading(false);
       }
     };
     fetchArtistes();
@@ -54,22 +54,21 @@ export default function PageArtistes() {
     <div className="artistes-template-page">
       <div className="container">
         <div className="header-text">
-          <h1 className="main-title">Nos Artistes</h1>
-          <p className="main-subtitle">Découvrez les talents qui composent notre communauté artistique</p>
+          <h1 className="main-title">{t('artists.page_title')}</h1>
+          <p className="main-subtitle">{t('artists.page_subtitle')}</p>
         </div>
         <SearchBar onSearch={setSearchQuery} />
         <FiltrerBar categories={categories} activeCategory={activeCategory} onFilterChange={setActiveCategory} />
         
         <div className="artists-grid">
           {loading ? (
-            // Affiche 4 Skeletons pendant le chargement
             [1, 2, 3, 4].map((n) => <div key={n} className="skeleton skeleton-card"></div>)
           ) : filteredArtistes.length > 0 ? (
             filteredArtistes.map((artiste) => (
-              <ArtistCard key={artiste.id} artiste={artiste}  />
+              <ArtistCard key={artiste.id} artiste={artiste} />
             ))
           ) : (
-            <p className="text-center w-100">Aucun artiste trouvé.</p>
+            <p className="text-center w-100">{t('common.no_results')}</p>
           )}
         </div>
       </div>

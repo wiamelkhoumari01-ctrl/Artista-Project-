@@ -17,6 +17,7 @@ import PrivateRoute from '../pages/connexion/PrivateRoute.jsx';
 import Profile from '../pages/Dashboard/Profile.jsx';
 import Dashboard from '../pages/Dashboard/ArtistDashboard.jsx';
 import AdminDashboard from '../pages/admin/AdminDashboard.jsx';
+import AdminKpis from '../pages/admin/AdminKpis.jsx';
 
 
 export default function RouterConfig() {
@@ -41,6 +42,7 @@ export default function RouterConfig() {
       {/* --- ROUTES RÉSERVÉES ADMIN --- */}
       <Route element={<PrivateRoute allowedRoles={['admin']} />}>
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/kpis"      element={<AdminKpis />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

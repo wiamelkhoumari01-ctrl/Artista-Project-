@@ -1,0 +1,173 @@
+{
+  "nav": {
+    "home": "الرئيسية",
+    "artists": "الفنانون",
+    "events": "الفعاليات",
+    "contact": "اتصل بنا",
+    "login": "تسجيل الدخول",
+    "profile": "ملفي الشخصي",
+    "dashboard": "لوحة التحكم",
+    "logout": "تسجيل الخروج"
+  },
+  "hero": {
+    "bg_alt": "مرسم الفنان",
+    "giant_text": "فن",
+    "main_title": "معرض الفنانين",
+    "description": "اكتشف مواهب استثنائية، واستكشف أعمالهم الفريدة وتابع جولاتهم الفنية.",
+    "btn_text": "اكتشف الفنانين"
+  },
+  "home": {
+    "artists_badge": "فنانونا",
+    "artists_title_1": "اكتشف",
+    "artists_title_2": "المواهب الفنية",
+    "view_all_artists": "عرض جميع الفنانين",
+    "view_all": "عرض الكل"
+  },
+  "bios": {
+    "badge": "السيرة الذاتية",
+    "read_more": "اقرأ المزيد"
+  },
+  "events": {
+    "title": "الفعاليات القادمة",
+    "subtitle": "لا تفوت المعارض والجولات القادمة.",
+    "location": "المكان",
+    "date": "التاريخ",
+    "view_details": "تفاصيل الفعالية"
+  },
+  "common": {
+    "no_results": "لم يتم العثور على نتائج.",
+    "loading_gallery": "جاري تحميل المعرض...",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "loading": "جاري التحميل...",
+    "success": "تم بنجاح",
+    "error": "خطأ"
+  },
+  "artists": {
+    "page_title": "فنانونا",
+    "page_subtitle": "اكتشف المواهب التي تشكل مجتمعنا الفني"
+  },
+  "auth": {
+    "login_title": "تسجيل الدخول",
+    "login_subtitle": "سعداء برؤيتك مرة أخرى!",
+    "register_title": "إنشاء حساب",
+    "register_subtitle": "انضم إلى مجتمع ARTISTA.",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "first_name": "الاسم الأول",
+    "last_name": "الاسم العائلي",
+    "role_user": "مستخدم",
+    "role_artist": "فنان",
+    "confirm_password": "تأكيد كلمة المرور",
+    "register_btn": "إنشاء حسابي",
+    "already_registered": "مسجل بالفعل؟ تسجيل الدخول",
+    "forgot_password_link": "نسيت كلمة المرور؟",
+    "login_btn": "تسجيل الدخول",
+    "or": "أو",
+    "no_account": "ليس لديك حساب؟ سجل الآن",
+    "back_home": "العودة للرئيسية",
+    "restricted_access": "الدخول مخصص للفنانين فقط.",
+    "reset_password_title": "كلمة مرور جديدة",
+    "reset_password_subtitle": "تأمين حساب ARTISTA الخاص بك.",
+    "new_password_label": "كلمة المرور الجديدة",
+    "confirm_password_label": "تأكيد كلمة المرور",
+    "reset_password_btn": "إعادة تعيين كلمة المرور",
+    "reset_success_msg": "تمت إعادة تعيين كلمة المرور بنجاح!",
+    "updating": "جاري التحديث...",
+    "reset_invalid_link": "الرابط منتهي الصلاحية أو غير صالح.",
+    "register_error": "حدث خطأ أثناء التسجيل.",
+    "google_error": "فشل تسجيل الدخول عبر جوجل."
+  },
+  "forgot_password": {
+    "title": "نسيت كلمة المرور",
+    "subtitle": "أدخل بريدك الإلكتروني لتلقي رابط إعادة التعيين.",
+    "email_label": "البريد الإلكتروني",
+    "email_placeholder": "exemple@gmail.com",
+    "submit_btn": "إرسال الرابط",
+    "loading": "جاري الإرسال...",
+    "back_to_login": "العودة لتسجيل الدخول",
+    "success_msg": "تم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني.",
+    "error_msg": "حدث خطأ. يرجى التحقق من البريد الإلكتروني."
+  },
+  "profile": {
+    "edit_photo": "تغيير الصورة",
+    "about_me": "نبذة عني",
+    "no_bio": "لا توجد سيرة ذاتية متاحة.",
+    "city": "المدينة",
+    "website": "الموقع الإلكتروني"
+  },
+  "dashboard": {
+    "management_title": "إدارة المعرض",
+    "page_title": "لوحة التحكم",
+    "add_artwork": "إضافة عمل فني",
+    "stat_views": "زيارات الملف",
+    "stat_clicks": "نقرات التواصل",
+    "stat_artworks": "الأعمال المعروضة",
+    "stat_status": "حالة الحساب",
+    "status_active": "نشط",
+    "collection_title": "مجموعتي",
+    "table_preview": "معاينة",
+    "table_title": "العنوان",
+    "table_date": "تاريخ النشر",
+    "table_actions": "الإجراءات",
+    "confirm_delete": "هل أنت متأكد من حذف هذا العمل؟",
+    "empty_gallery": "معرضك فارغ.",
+    "publish_first": "انشر عملك الأول",
+    "restricted_access": "دخول محدود."
+  },
+  "testimonials": {
+    "subtitle": "آراء الزوار",
+    "title": "ماذا يقول زوارنا"
+  },
+  "contact": {
+    "title": "اتصل بنا",
+    "subtitle": "لديك سؤال؟ فريقنا سيرد عليك قريباً.",
+    "address": "123 شارع الفن، الدار البيضاء، المغرب",
+    "placeholder_name": "اسمك",
+    "placeholder_email": "بريدك الإلكتروني",
+    "placeholder_message": "رسالتك",
+    "btn_send": "إرسال الرسالة",
+    "success_msg": "تم إرسال رسالتك بنجاح!"
+  },
+  "admin": {
+    "dashboard_title": "إدارة ARTISTA",
+    "dashboard_desc": "قم بإدارة المستخدمين والفنانين والمنصة من هذا الفضاء المركزي.",
+    "current_lang_badge": "اللغة الحالية",
+    "stats": {
+      "total_users": "المستخدمين",
+      "total_artists": "الفنانين",
+      "total_artworks": "الأعمال الفنية",
+      "total_events": "الفعاليات"
+    },
+    "sections": {
+      "artists_management": "إدارة الفنانين",
+      "artists_subtitle": "القائمة الكاملة للمبدعين المسجلين في المنصة.",
+      "users_management": "إدارة المستخدمين",
+      "users_subtitle": "التحكم في حسابات المجتمع وأدوارهم.",
+      "events_management": "إدارة الفعاليات",
+      "events_subtitle": "التحكم في الفعاليات والجولات الفنية."
+    },
+    "table": {
+      "id": "معرف",
+      "photo": "الصورة",
+      "name": "الاسم",
+      "email": "البريد الإلكتروني",
+      "role": "الدور",
+      "city": "المدينة",
+      "actions": "الإجراءات"
+    },
+    "buttons": {
+      "export_pdf": "تصدير PDF",
+      "add_artist": "إضافة فنان",
+      "add_user": "إضافة مستخدم",
+      "edit": "تعديل",
+      "delete": "حذف"
+    },
+    "modals": {
+      "delete_title": "تأكيد الحذف",
+      "delete_confirm": "هل أنت متأكد من رغبتك في حذف هذا العنصر؟ لا يمكن التراجع عن هذا الإجراء.",
+      "cancel": "إلغاء",
+      "confirm": "تأكيد"
+    }
+  }
+}

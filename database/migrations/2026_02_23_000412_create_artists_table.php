@@ -15,26 +15,19 @@ return new class extends Migration
         Schema::create('artists', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            // On permet à la catégorie d'être vide au début
             $table->foreignId('category_id')->nullable()->constrained()->onDelete('set null');
             $table->string('image_url')->nullable();
+            $table->json('stage_name')->nullable(); 
+            $table->json('bio')->nullable();
+            $table->json('specialite')->nullable();
+            $table->string('slug')->unique();
             $table->string('phone')->nullable();
             $table->string('country')->nullable();
             $table->string('city')->nullable();
             $table->string('website')->nullable();
+            $table->integer('views_count')->default(0);
             $table->timestamps();
-        });
-
-        // Table de traduction
-        Schema::create('artist_translations', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('artist_id')->constrained()->onDelete('cascade');
-            $table->string('locale')->index();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('stage_name')->nullable();
-            $table->text('bio')->nullable();
-            $table->string('slug')->unique();
-            $table->unique(['artist_id', 'locale']);
         });
     }
 
@@ -44,6 +37,5 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('artists');
-        Schema::dropIfExists('artists_translations');
     }
 };

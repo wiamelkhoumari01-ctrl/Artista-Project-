@@ -1,6 +1,6 @@
 import React from 'react';
 
-const LoadingScreen = () => {
+export default function LoadingScreen(){
   return (
     <div style={{
       height: '100vh',
@@ -43,4 +43,3 @@ const LoadingScreen = () => {
   );
 };
 
-export default LoadingScreen;

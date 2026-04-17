@@ -2,7 +2,7 @@
    1. RESET & VARIABLES
    ========================================================================== */
 :root { 
-    --beige-light: #f6efe6;
+    --beige-light: #f4ece4;
     --brown: #8c6a4a;
     --accent-orange: #ff6b4a; 
     --accent-red: #ff0000;    
@@ -116,23 +116,36 @@ a, .nav-link, .btn, .btnconnexion, .btn-artiste, .btn-suivant, .art-card, .hero-
 }
 
 .dropdown-menu {
-    border-radius: 15px;
-    border: none;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    padding: 10px;
-    margin-top: 10px !important;
+    background-color: #fcfbf9 !important; /* Beige très clair et luxueux */
+    border-radius: 20px !important; /* Coins très arrondis */
+    border: 1px solid rgba(197, 160, 89, 0.2) !important; /* Bordure dorée très subtile */
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08) !important;
+    padding: 12px !important;
+    margin-top: 15px !important;
+    min-width: 240px;
+    animation: dropdownFade 0.3s ease-out;
 }
-
+.dropdown-menu .bg-light {
+    background-color: #f6efe6 !important; /* Ton beige-light défini dans tes variables */
+    border-radius: 12px !important;
+    margin-bottom: 10px !important;
+}
 .dropdown-item {
-    border-radius: 8px;
-    padding: 8px 15px;
+    border-radius: 10px !important;
+    padding: 10px 15px !important;
     font-size: 14px;
-    transition: 0.2s;
+    font-weight: 500;
+    color: #4a3939 !important; /* Brun foncé pour la lisibilité */
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
-
+/* État Hover (Survol) */
 .dropdown-item:hover {
-    background-color: var(--beige-light);
-    color: var(--brown);
+    background-color: #c5a059 !important; /* Couleur dorée au survol */
+    color: #ffffff !important; /* Texte blanc au survol */
+    transform: translateX(5px);
 }
 
 /* ==========================================================================
@@ -250,24 +263,6 @@ a, .nav-link, .btn, .btnconnexion, .btn-artiste, .btn-suivant, .art-card, .hero-
     z-index: 1;
 }
 
-.hero-scroll-btn {
-    position: absolute;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 2px solid rgba(128,128,128,0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    color: #444444;
-    z-index: 3;
-    animation: hero-bounce 2s infinite;
-    transition: var(--transition-smooth);
-}
 /* Style spécifique pour le lien Admin dans le dropdown */
 .dropdown-item.admin-link {
     transition: all 0.3s ease;
@@ -284,8 +279,29 @@ a, .nav-link, .btn, .btnconnexion, .btn-artiste, .btn-suivant, .art-card, .hero-
 .dropdown-item.admin-link:hover {
     background-color: #ffffff !important; /* Ton Artista Gold */
     color: #4a3939 !important;
-    transform: translateX(5px); /* Petit décalage vers la droite pour le dynamisme */
+    transform: translateX(3px); /* Petit décalage vers la droite pour le dynamisme */
 }
+.dropdown-item.text-danger:hover {
+    background-color: #ff6b4a !important; /* Orange/Rouge de ta palette */
+    color: #ffffff !important;
+}
+
+/* Style de la barre de séparation */
+.dropdown-divider {
+    border-top: 1px solid rgba(197, 160, 89, 0.1) !important;
+    margin: 8px 0 !important;
+}
+.dropdown-item.admin-link:hover {
+    background-color: #c5a059 !important;
+    color: white !important;
+}
+
+@keyframes dropdownFade {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
 /* Ajustement du sélecteur de langue pour qu'il soit élégant */
 .lang-select-nav {
     background: transparent;
@@ -354,6 +370,7 @@ a, .nav-link, .btn, .btnconnexion, .btn-artiste, .btn-suivant, .art-card, .hero-
 
 .card-info { position: absolute; bottom: 0; left: 0; right: 0; z-index: 2; }
 
+
 /* ==========================================================================
    6. RESPONSIVE & MOBILE
    ========================================================================== */
@@ -390,6 +407,10 @@ a, .nav-link, .btn, .btnconnexion, .btn-artiste, .btn-suivant, .art-card, .hero-
 
     .nav-connexion-mobile { border-top: 1px solid rgba(140, 106, 74, 0.2); margin-top: 10px; }
     .navbar-toggler { border-color: rgba(81, 80, 80, 0.5); background-color: rgba(0, 0, 0, 0.1); }
+}
+.texte{
+
+    font-family: 'Playfair Display', serif;
 }
 
 @media (min-width: 992px) {

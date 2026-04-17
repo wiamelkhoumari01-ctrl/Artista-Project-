@@ -1,34 +1,51 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function ArtistCard({ artiste }) {
+    const { locale } = useLanguage();
 
-return (
+    if (!artiste) return null;
 
-<Link to={`/artistes/${artiste.slug}`} className="artist-card">
+    // Support des deux formats : API backend (artist_translations) et mock front (nom_scene direct)
+    const stageName = artiste.artist_translations?.[0]?.stage_name
+        || artiste.nom_scene
+        || "Artiste";
 
-<img
-src={artiste.photo_url}
-alt={artiste.nom_scene}
-/>
+    const categoryName = artiste.category?.category_translations?.[0]?.name
+        || artiste.specialite
+        || "Artiste";
 
-<div className="artist-card-body">
+    // Support image_url (API) et photo_url (mock front)
+    const imageUrl = artiste.image_url || artiste.photo_url || "/images/default-avatar.png";
 
-<h3 className="artist-name">
-{artiste.nom_scene}
-</h3>
+    const slug = artiste.artist_translations?.[0]?.slug
+        || artiste.slug
+        || "#";
 
-<span className="artist-specialty">
-{artiste.specialite}
-</span>
-
-<p className="artist-description">
-{artiste.description}
-</p>
-
-</div>
-
-</Link>
-
-);
+    return (
+        <Link 
+            to={`/artistes/${slug}`} 
+            className="artist-card shadow-sm border-0 h-100 text-decoration-none"
+            style={{ display: 'block', color: 'inherit' }}
+        >
+            <div className="artist-card-img-container" style={{ height: '300px', overflow: 'hidden' }}>
+                <img
+                    src={imageUrl}
+                    alt={stageName}
+                    className="w-100 h-100 object-fit-cover"
+                    onError={(e) => { e.target.src = "/images/default-artist.jpg"; }}
+                />
+            </div>
+            
+            <div className="artist-card-body p-3">
+                <span className="badge mb-2" style={{ backgroundColor: '#c5a059', fontSize: '0.75rem' }}>
+                    {categoryName}
+                </span>
+                <h3 className="artist-name h5 mb-2" style={{ fontFamily: 'Playfair Display, serif', fontWeight: 'bold' }}>
+                    {stageName}
+                </h3>
+            </div>
+        </Link>
+    );
 }

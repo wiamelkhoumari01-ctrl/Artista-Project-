@@ -1,5 +1,5 @@
 :root {
-    --beige-light: #f6efe6;
+    --beige-light: #f4ece4;
     --brown: #8c6a4a;
     --black: #1a1a1a;
     --accent-orange: #c5a059; /* Changé pour le doré Artista pour cohérence */
@@ -84,14 +84,24 @@
     margin-bottom: 20px;
 }
 
+/* --- AJUSTEMENT DU HEADER DE SECTION (CORRIGÉ POUR PDF) --- */
 .section-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column; /* Pour empiler Titre + Span */
+    align-items: flex-start; 
+    position: relative;
     margin-bottom: 20px;
 }
 
+.section-header h2 {
+    margin: 0;
+}
+
+/* Utilisation de inset-inline-end pour gérer l'arabe et le français automatiquement */
 .section-header button {
+    position: absolute;
+    inset-inline-end: 0; /* Remplace "right: 0" pour s'adapter à la langue */
+    top: 10px;
     background: var(--black);
     color: white;
     border: 1px solid var(--black);
@@ -146,7 +156,7 @@ td img {
 
 /* --- SOUS-TITRES DANS LES SECTIONS (Span) --- */
 .table-section h2 {
-    margin-bottom: 5px; /* On réduit la marge pour coller au span */
+    margin-bottom: 5px; 
 }
 
 .table-section span {
@@ -154,35 +164,15 @@ td img {
     color: var(--brown);
     font-size: 0.9rem;
     opacity: 0.8;
-    margin-bottom: 25px; /* Espace avant le tableau */
+    margin-bottom: 25px; 
     font-style: italic;
-}
-
-/* --- AJUSTEMENT DU HEADER DE SECTION --- */
-.section-header {
-    display: flex;
-    flex-direction: column; /* Pour empiler Titre + Span */
-    align-items: flex-start; 
-    position: relative;
-    margin-bottom: 20px;
-}
-
-.section-header h2 {
-    margin: 0;
-}
-
-/* On repositionne le bouton PDF à droite de manière absolue ou via un conteneur */
-.section-header button {
-    position: absolute;
-    right: 0;
-    top: 10px;
 }
 
 /* --- EN-TÊTE DU DASHBOARD --- */
 .admin-topbar {
     margin-bottom: 50px;
     padding-bottom: 30px;
-    border-bottom: 1px solid rgba(197, 160, 89, 0.2); /* Ligne dorée très discrète */
+    border-bottom: 1px solid rgba(197, 160, 89, 0.2); 
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -198,20 +188,20 @@ td img {
 }
 
 .admin-desc {
-    font-family: 'Inter', sans-serif; /* Ou ta font secondaire */
+    font-family: 'Inter', sans-serif; 
     color: #666;
     font-size: 1.1rem;
     line-height: 1.6;
-    max-width: 750px; /* Évite que le texte ne s'étale trop sur les grands écrans */
+    max-width: 750px; 
     margin: 0;
     font-weight: 400;
 }
 
-/* Badge de langue repositionné pour ne pas gêner le texte */
+/* Badge de langue repositionné */
 .badge-lang {
     margin-top: 20px;
     background: var(--black);
-    color: #c5a059; /* Texte doré sur fond noir */
+    color: #c5a059; 
     padding: 6px 15px;
     font-size: 12px;
     letter-spacing: 2px;
@@ -220,7 +210,7 @@ td img {
     border-radius: 4px;
 }
 
-/* Optionnel : Petit trait doré sous le titre */
+/* Petit trait doré sous le titre */
 .admin-topbar h1::after {
     content: '';
     display: block;
@@ -229,6 +219,7 @@ td img {
     background-color: #c5a059;
     margin-top: 10px;
 }
+
 /* Bouton PDF (Version classique) */
 .btn-pdf-classic {
     background-color: #c5a059;
@@ -252,14 +243,13 @@ td img {
 
 .actions-cell {
     display: flex;
-    justify-content: flex-end; /* Pousse les boutons à droite */
+    justify-content: flex-end; 
     gap: 10px;
 }
 
-
-/* Style des boutons (Inspiré du bouton PDF) */
+/* Style des boutons Action */
 .btn-action {
-    background-color: #c5a059; /* Marron doré ARTISTA */
+    background-color: #c5a059; 
     color: white;
     border: none;
     padding: 8px 16px;
@@ -268,18 +258,16 @@ td img {
     font-weight: 500;
     font-size: 0.85rem;
     transition: all 0.3s ease;
-    text-transform: uppercase; /* Pour le look professionnel */
+    text-transform: uppercase; 
     letter-spacing: 0.5px;
 }
 
-/* Variante pour différencier légèrement la suppression si besoin, 
-   sinon garde les deux identiques comme demandé */
 .btn-action.delete {
-    background-color: #91600a; /* Un marron un peu plus sombre pour le "Supprimer" */
+    background-color: #91600a; 
 }
 
 .btn-action:hover {
-    background-color: #000000; /* Effet de survol */
+    background-color: #000000; 
     transform: translateY(-1px);
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
@@ -298,24 +286,24 @@ td img {
 
 th:last-child, td:last-child {
     text-align: right;
-    padding-right: 20px; /* Petit espace au bord */
+    padding-right: 20px; 
 }
-/* Overlay : Fond noir transparent qui bloque tout */
+
+/* MODALS */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6); /* Fond sombre */
+    background: rgba(0, 0, 0, 0.6); 
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 9999;
-    backdrop-filter: blur(4px); /* Effet de flou sur le fond */
+    backdrop-filter: blur(4px); 
 }
 
-/* La boîte du Modal centrée */
 .modal-box {
     background: white;
     width: 90%;
@@ -351,7 +339,6 @@ th:last-child, td:last-child {
     margin-bottom: 25px;
 }
 
-/* Boutons du footer */
 .modal-footer {
     display: flex;
     justify-content: center;
@@ -369,7 +356,7 @@ th:last-child, td:last-child {
 }
 
 .btn-primary {
-    background: #c5a059; /* Or ARTISTA */
+    background: #c5a059; 
     color: white;
     border: none;
     padding: 12px 25px;
@@ -379,24 +366,24 @@ th:last-child, td:last-child {
 }
 
 .btn-danger {
-    background: #d63031 !important; /* Rouge si suppression */
+    background: #d63031 !important; 
 }
 
 .btn-primary:hover {
     filter: brightness(1.1);
 }
-/* --- REPARATION DU FORMULAIRE DANS LE MODAL --- */
 
+/* FORMULAIRE MODAL */
 .admin-form {
     display: flex;
     flex-direction: column;
-    gap: 15px; /* Espace entre les champs */
+    gap: 15px; 
     padding: 10px 0;
 }
 
 .form-group {
     display: flex;
-    flex-direction: column; /* Aligne le label au dessus de l'input */
+    flex-direction: column; 
     align-items: flex-start;
     width: 100%;
 }
@@ -414,7 +401,7 @@ th:last-child, td:last-child {
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 1rem;
-    box-sizing: border-box; /* Important pour que le padding n'agrandisse pas l'input */
+    box-sizing: border-box; 
 }
 
 .form-group input:focus {
@@ -423,51 +410,268 @@ th:last-child, td:last-child {
     box-shadow: 0 0 5px rgba(197, 160, 89, 0.3);
 }
 
-/* --- TEXTE DE SUPPRESSION --- */
 .delete-text {
     color: #666;
     line-height: 1.5;
     padding: 10px 0;
 }
 
-/* --- BOUTONS DU MODAL --- */
-.modal-footer {
-    margin-top: 20px;
-    display: flex;
-    gap: 10px;
-}
-
-.btn-secondary {
-    background: #f4f4f4;
-    border: 1px solid #ddd;
-    color: #666;
-    padding: 10px 20px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.btn-primary {
-    background: #c5a059;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    cursor: pointer;
-    flex-grow: 1; /* Le bouton d'action prend la place restante */
-    font-weight: bold;
-}
-
-.btn-danger {
-    background: #e74c3c !important;
-}
-
-.btn-danger:hover {
-    background: #c0392b !important;
-}
-/* --- RESPONSIVE --- */
+/* RESPONSIVE */
 @media (max-width: 768px) {
     .section-header button {
         position: static;
         margin-top: 15px;
     }
+}
+/* ── Responsive tables ── */
+.table-responsive-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive-wrapper table {
+    min-width: 600px;
+    width: 100%;
+}
+
+.th-actions { text-align: right; }
+
+.td-empty {
+    text-align: center;
+    color: #aaa;
+    padding: 24px !important;
+    font-style: italic;
+}
+
+.img-thumb {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.type-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 600;
+    background: rgba(197, 160, 89, 0.12);
+    color: #c5a059;
+}
+
+/* ── Modal scrollable et fixe ── */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(3px);
+    overflow-y: auto;
+}
+
+.modal-box {
+    background: #fff;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.18);
+    position: relative;
+    margin: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 28px 0;
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 1;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    padding-bottom: 16px;
+}
+
+.modal-header h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+}
+
+.modal-close {
+    background: rgba(0, 0, 0, 0.06);
+    border: none;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    line-height: 1;
+}
+
+.modal-close:hover { background: rgba(0, 0, 0, 0.1); }
+
+.modal-body {
+    padding: 20px 28px;
+}
+
+.modal-footer {
+    padding: 16px 28px 24px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    position: sticky;
+    bottom: 0;
+    background: #fff;
+}
+
+/* ── Formulaire modal ── */
+.admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.form-row {
+    display: flex;
+    gap: 14px;
+}
+
+.form-row .form-group { flex: 1; }
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-group label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 10px 14px;
+    border: 1.5px solid rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    background: #fdfaf6;
+    transition: border-color 0.2s;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: rgba(197, 160, 89, 0.6);
+}
+
+/* ── Boutons modal ── */
+.btn-secondary {
+    padding: 10px 20px;
+    background: transparent;
+    border: 1.5px solid rgba(0, 0, 0, 0.12);
+    border-radius: 10px;
+    color: #888;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.btn-primary {
+    padding: 10px 24px;
+    background: linear-gradient(135deg, #c5a059, #e8c97a);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #e53935, #ef5350) !important;
+}
+
+.delete-text {
+    color: #555;
+    font-size: 15px;
+    line-height: 1.6;
+    text-align: center;
+    padding: 12px 0;
+}
+
+/* ── Bouton KPIs ── */
+.btn-kpi {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 18px;
+    background: linear-gradient(135deg, #c5a059, #e8c97a);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    text-decoration: none !important;
+    transition: opacity 0.2s;
+}
+
+.btn-kpi:hover { opacity: 0.9; color: #fff; }
+
+/* ── Responsive mobile ── */
+@media (max-width: 768px) {
+    .admin-main { padding: 16px; }
+
+    .admin-topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .form-row {
+        flex-direction: column;
+    }
+
+    .modal-box {
+        max-height: 95vh;
+        border-radius: 16px;
+    }
+
+    .table-responsive-wrapper table {
+        min-width: 500px;
+    }
+}
+
+@media (max-width: 480px) {
+    .cards { grid-template-columns: 1fr; }
 }

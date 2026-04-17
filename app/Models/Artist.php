@@ -1,38 +1,46 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Model;
-use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Astrotomic\Translatable\Translatable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Artist extends Model implements TranslatableContract {
-    use Translatable;
-
-    protected $fillable = ['user_id', 'category_id', 'image_url', 'phone', 'country', 'city', 'website', 'views_count', 'clicks_count'];
-    
-    // Attributs traduisibles
-    public $translatedAttributes = ['first_name', 'last_name', 'stage_name', 'bio', 'slug'];
-    
-    public function category()
+class Artist extends Model
 {
-    return $this->belongsTo(Category::class);
-}
-    public function artist_translations(): HasMany
+    // On garde ta structure avec stage_name, bio et specialite en JSON
+    protected $fillable = [
+        'user_id', 'category_id', 'image_url', 'stage_name', 
+        'bio', 'specialite', 'slug', 'phone', 'country', 'city', 'website'
+    ];
+
+    // C'est ici que la magie opère pour Laravel
+    protected $casts = [
+        'stage_name' => 'array', // Sera stocké comme {"fr":"...", "ar":"..."}
+        'bio'        => 'array',
+        'specialite' => 'array',
+    ];
+
+    /**
+     * Cette méthode s'assure que même si une langue est manquante en DB, 
+     * l'API ne renvoie pas d'erreur pour ton Front.
+     */
+    public function toArray()
     {
-        return $this->hasMany(ArtistTranslation::class);
+        $array = parent::toArray();
+        
+        // On s'assure que ces champs sont toujours des objets pour ton front
+        $array['stage_name'] = $this->stage_name ?? ['fr' => '', 'ar' => '', 'en' => ''];
+        $array['bio']        = $this->bio        ?? ['fr' => '', 'ar' => '', 'en' => ''];
+        $array['specialite'] = $this->specialite ?? ['fr' => '', 'ar' => '', 'en' => ''];
+
+        return $array;
     }
 
-    public function user() {
-        return $this->belongsTo(User::class);
-    }
-
-    public function artworks() {
-        return $this->hasMany(Artwork::class);
-    }
-
-    public function events() {
-        return $this->belongsToMany(Event::class, 'artist_event');
-    }
-
+    // Relations (inchangées)
+    public function user(): BelongsTo { return $this->belongsTo(User::class); }
+    public function category(): BelongsTo { return $this->belongsTo(Category::class); }
+    public function artworks(): HasMany { return $this->hasMany(Artwork::class); }
+    public function events(): BelongsToMany { return $this->belongsToMany(Event::class, 'artist_event'); }
 }

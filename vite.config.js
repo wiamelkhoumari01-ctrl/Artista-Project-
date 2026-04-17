@@ -11,12 +11,17 @@ export default defineConfig({
         react(),
     ],
     server: {
-        // On force l'utilisation de 127.0.0.1 au lieu de localhost ou le serveur Vite via l'adresse IPv6 [::1]
-        host: '127.0.0.1', 
+        host: '127.0.0.1',
         port: 5173,
         strictPort: true,
         hmr: {
             host: '127.0.0.1',
         },
+    },
+    define: {
+        // Expose explicitement les variables VITE_ au frontend
+        __GOOGLE_CLIENT_ID__: JSON.stringify(
+            '832417069767-tumkpqutir1v6juarh1ugv4h9fr9cvk8.apps.googleusercontent.com'
+        ),
     },
 });

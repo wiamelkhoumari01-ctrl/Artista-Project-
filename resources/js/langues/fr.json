@@ -1,0 +1,173 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "artists": "Artistes",
+    "events": "Événements",
+    "contact": "Contact",
+    "login": "Connexion",
+    "profile": "Mon Profil",
+    "dashboard": "Tableau de bord",
+    "logout": "Déconnexion"
+  },
+  "hero": {
+    "bg_alt": "Studio d'artiste",
+    "giant_text": "Art",
+    "main_title": "Portfolio d'Artistes",
+    "description": "Découvrez des talents exceptionnels, explorez leurs œuvres uniques et suivez leurs tournées artistiques.",
+    "btn_text": "Découvrir les Artistes"
+  },
+  "home": {
+    "artists_badge": "NOS ARTISTES",
+    "artists_title_1": "Découvrez Nos",
+    "artists_title_2": "Talents Artistiques",
+    "view_all_artists": "Voir tous les artistes",
+    "view_all": "Voir Tout"
+  },
+  "bios": {
+    "badge": "BIOGRAPHIE",
+    "read_more": "Lire Plus"
+  },
+  "events": {
+    "title": "Événements à venir",
+    "subtitle": "Ne manquez pas les prochaines expositions et tournées.",
+    "location": "Lieu",
+    "date": "Date",
+    "view_details": "Détails de l'événement"
+  },
+  "common": {
+    "no_results": "Aucun résultat trouvé.",
+    "loading_gallery": "Chargement de la galerie...",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "loading": "Chargement...",
+    "success": "Succès",
+    "error": "Erreur"
+  },
+  "artists": {
+    "page_title": "Nos Artistes",
+    "page_subtitle": "Découvrez les talents qui composent notre communauté artistique"
+  },
+  "auth": {
+    "login_title": "Connexion",
+    "login_subtitle": "Heureux de vous revoir !",
+    "register_title": "Inscription",
+    "register_subtitle": "Rejoignez la communauté ARTISTA.",
+    "email": "Email",
+    "password": "Mot de passe",
+    "first_name": "Prénom",
+    "last_name": "Nom",
+    "role_user": "Utilisateur",
+    "role_artist": "Artiste",
+    "confirm_password": "Confirmer le mot de passe",
+    "register_btn": "Créer mon compte",
+    "already_registered": "Déjà inscrit ? Se connecter",
+    "forgot_password_link": "Mot de passe oublié ?",
+    "login_btn": "Se connecter",
+    "or": "ou",
+    "no_account": "Pas encore de compte ? S'inscrire",
+    "back_home": "Retour à l'accueil",
+    "restricted_access": "Accès réservé aux artistes.",
+    "reset_password_title": "Nouveau mot de passe",
+    "reset_password_subtitle": "Sécurisez votre compte ARTISTA.",
+    "new_password_label": "Nouveau mot de passe",
+    "confirm_password_label": "Confirmer le mot de passe",
+    "reset_password_btn": "Réinitialiser le mot de passe",
+    "reset_success_msg": "Votre mot de passe a été réinitialisé avec succès !",
+    "updating": "Mise à jour...",
+    "reset_invalid_link": "Le lien a expiré ou est invalide.",
+    "register_error": "Une erreur est survenue lors de l'inscription.",
+    "google_error": "L'authentification Google a échoué."
+  },
+  "forgot_password": {
+    "title": "Mot de passe oublié",
+    "subtitle": "Entrez votre email pour recevoir un lien de réinitialisation.",
+    "email_label": "Email",
+    "email_placeholder": "exemple@gmail.com",
+    "submit_btn": "Envoyer le lien",
+    "loading": "Envoi...",
+    "back_to_login": "Retour à la connexion",
+    "success_msg": "Un lien de réinitialisation a été envoyé à votre adresse.",
+    "error_msg": "Une erreur est survenue. Veuillez vérifier l'adresse email."
+  },
+  "profile": {
+    "edit_photo": "Modifier la photo",
+    "about_me": "À propos de moi",
+    "no_bio": "Aucune biographie disponible.",
+    "city": "Ville",
+    "website": "Site web"
+  },
+  "dashboard": {
+    "management_title": "Gestion de Galerie",
+    "page_title": "Tableau de Bord",
+    "add_artwork": "Ajouter une œuvre",
+    "stat_views": "Vues Profil",
+    "stat_clicks": "Clics Réseaux",
+    "stat_artworks": "Œuvres Exposées",
+    "stat_status": "Statut Compte",
+    "status_active": "Actif",
+    "collection_title": "Ma Collection",
+    "table_preview": "Aperçu",
+    "table_title": "Titre",
+    "table_date": "Date de Publication",
+    "table_actions": "Actions",
+    "confirm_delete": "Voulez-vous vraiment supprimer cette œuvre ?",
+    "empty_gallery": "Votre galerie est vide.",
+    "publish_first": "Publier votre première œuvre",
+    "restricted_access": "Accès restreint."
+  },
+  "testimonials": {
+    "subtitle": "TÉMOIGNAGES",
+    "title": "Ce Que Disent Nos Visiteurs"
+  },
+  "contact": {
+    "title": "Contactez-Nous",
+    "subtitle": "Une question ? Notre équipe vous répondra rapidement.",
+    "address": "123 Rue de l'Art, Casablanca, Maroc",
+    "placeholder_name": "Votre nom",
+    "placeholder_email": "Votre email",
+    "placeholder_message": "Votre message",
+    "btn_send": "Envoyer le message",
+    "success_msg": "Votre message a été envoyé avec succès !"
+  },
+  "admin": {
+    "dashboard_title": "Administration ARTISTA",
+    "dashboard_desc": "Gérez les utilisateurs, les artistes et la plateforme depuis cet espace centralisé.",
+    "current_lang_badge": "Langue actuelle",
+    "stats": {
+      "total_users": "Utilisateurs",
+      "total_artists": "Artistes",
+      "total_artworks": "Œuvres",
+      "total_events": "Événements"
+    },
+    "sections": {
+      "artists_management": "Gestion des Artistes",
+      "artists_subtitle": "Liste complète des créateurs inscrits sur la plateforme.",
+      "users_management": "Gestion des Utilisateurs",
+      "users_subtitle": "Contrôle des comptes et des rôles de la communauté.",
+      "events_management": "Événements",
+      "events_subtitle": "Contrôle des Événements & Tournnées."
+    },
+    "table": {
+      "id": "ID",
+      "photo": "Photo",
+      "name": "Nom",
+      "email": "Email",
+      "role": "Rôle",
+      "city": "Ville",
+      "actions": "Actions"
+    },
+    "buttons": {
+      "export_pdf": "Exporter PDF",
+      "add_artist": "Ajouter un Artiste",
+      "add_user": "Ajouter un Utilisateur",
+      "edit": "Modifier",
+      "delete": "Supprimer"
+    },
+    "modals": {
+      "delete_title": "Confirmer la suppression",
+      "delete_confirm": "Êtes-vous sûr de vouloir supprimer cet élément ? Cette action est irréversible.",
+      "cancel": "Annuler",
+      "confirm": "Confirmer"
+    }
+  }
+}

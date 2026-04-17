@@ -17,13 +17,14 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('locale')->default('fr');
 
             // --- TES AJOUTS PERSONNALISÉS ---
             // Le rôle pour différencier tes utilisateurs
             $table->enum('role', ['admin', 'artiste', 'utilisateur'])->default('utilisateur');
             
-            // La langue préférée (Assure-toi que la migration 'languages' est créée AVANT celle-ci)
-            $table->foreignId('language_id')->constrained('languages')->onDelete('cascade');
             // --------------------------------
 
             $table->rememberToken();

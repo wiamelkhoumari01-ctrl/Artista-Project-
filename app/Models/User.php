@@ -15,11 +15,11 @@ class User extends Authenticatable
      * Les attributs assignables en masse.
      */
     protected $fillable = [
+        'first_name', 'last_name',
         'email', 
         'password', 
         'role', // admin, artiste, utilisateur
-        'language_id',
-        'email_verified_at'
+        'email_verified_at', "locale",
     ];
 
     /**
@@ -39,16 +39,6 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
-    }
-
-    // --- RELATIONS ---
-
-    /**
-     * Relation avec la table des langues.
-     */
-    public function language() 
-    {
-        return $this->belongsTo(Language::class);
     }
 
     /**

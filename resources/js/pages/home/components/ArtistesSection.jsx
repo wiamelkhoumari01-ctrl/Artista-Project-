@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion"; // Import de framer-motion
+import { motion } from "framer-motion";
+import { useLanguage } from "../../../context/LanguageContext";
 
 export default function ArtistesSection() {
+  const { t } = useLanguage();
   const [artistes, setArtistes] = useState([]);
 
   useEffect(() => {
@@ -15,14 +17,14 @@ export default function ArtistesSection() {
     <section id="bas" className="py-5" style={{ backgroundColor: '#f4ece4' }}>
       <div className="container-fluid px-md-5">
         <div className="mb-5 text-center">
-          <p className="text-muted small mb-1">NOS ARTISTES</p>
-          <h2 className="fw-bold display-6">
-            Découvrez Nos <br /> Talents Artistiques
+          <p className="text-muted small mb-1">{t('home.artists_badge')}</p>
+          <h2 className="texte fw-bold display-6">
+            {t('home.artists_title_1')} <br /> {t('home.artists_title_2')}
           </h2>
         </div>
 
         <div className="row g-4 justify-content-center">
-          {display.map((a, index) => ( // On récupère l'index pour le délai
+          {display.map((a, index) => (
             <motion.div 
               key={a.id} 
               className="col-12 col-md-6 col-lg-4"
@@ -31,7 +33,7 @@ export default function ArtistesSection() {
               viewport={{ once: false }}
               transition={{ 
                 duration: 0.7, 
-                delay: index * 0.1, // Les cartes s'affichent l'une après l'autre
+                delay: index * 0.1,
                 ease: "easeOut"
               }}
             >
@@ -58,7 +60,7 @@ export default function ArtistesSection() {
 
         <div className="text-center mt-5">
           <Link to="/artistes" className="btn btn-dark rounded-pill px-5 py-3">
-            Voir tous les artistes →
+            {t('home.view_all_artists')} →
           </Link>
         </div>
       </div>

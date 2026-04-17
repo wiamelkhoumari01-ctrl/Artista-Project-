@@ -1,0 +1,183 @@
+.profileWrapper {
+    background: #f4ece4;
+    min-height: 100vh;
+    padding-top: 100px;
+    padding-bottom: 60px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px 28px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.07);
+    border: 1px solid rgba(0,0,0,0.05);
+    height: 100%;
+}
+
+.flash {
+    background: linear-gradient(135deg, #c5a059, #e8c97a);
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 14px 24px;
+    border-radius: 14px;
+    margin-bottom: 24px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(197,160,89,0.35);
+}
+
+/* ── Avatar ── */
+.avatarWrap {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 18px;
+}
+
+.avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #f0e8dc;
+    display: block;
+}
+
+.cameraBtn {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 2px solid #fff;
+    transition: background 0.2s;
+    background: #c5a059;
+}
+
+/* ── Textes ── */
+.name {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    color: #1a1a1a;
+    margin: 0 0 4px;
+}
+
+.location {
+    text-align: center;
+    color: #999;
+    font-size: 13px;
+    margin: 0 0 14px;
+}
+
+.badge {
+    display: block;
+    width: fit-content;
+    margin: 0 auto 18px;
+    background: rgba(197,160,89,0.12);
+    color: #c5a059;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 5px 14px;
+    border-radius: 99px;
+}
+
+.bio {
+    color: #555;
+    line-height: 1.8;
+    font-size: 15px;
+}
+
+/* ── Formulaire ── */
+.inputField,
+.inputField select,
+select.inputField {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid rgba(0,0,0,0.1);
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    background: #fdfaf6;
+    transition: border-color 0.2s;
+    display: block;
+    box-sizing: border-box;
+    appearance: auto;
+}
+
+.inputField:focus {
+    border-color: rgba(197,160,89,0.6);
+}
+
+.label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 5px;
+}
+
+/* ── Boutons ── */
+.btnGold {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #c5a059, #e8c97a);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity 0.2s;
+}
+
+.btnGold:hover { opacity: 0.9; }
+.btnGold:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.btnCancel {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: transparent;
+    border: 1.5px solid rgba(0,0,0,0.1);
+    border-radius: 10px;
+    color: #aaa;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+/* ── Loader ── */
+.loaderContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .profileWrapper { padding-top: 80px; }
+    .card { padding: 24px 18px; }
+    .name { font-size: 18px; }
+}

@@ -1,6 +1,7 @@
 import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
-export default function Footer() {
+function FooterHome() {
   return (
     <footer className="custom-footer">
       <div className="container">
@@ -14,23 +15,15 @@ export default function Footer() {
               Plateforme dédiée aux artistes pour partager leurs oeuvres, biographies et tournées avec le monde entier.
             </p>
             <div className="social-icons">
-              <a 
-                href="https://www.facebook.com/profile.php?id=61584894126989" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="social-link"    
-              >
+              <a href="https://www.facebook.com/profile.php?id=61584894126989"
+                target="_blank" rel="noopener noreferrer" className="social-link">
                 <i className="fab fa-facebook-f"></i>
               </a>
               <i className="fab fa-instagram"></i>
               <i className="fab fa-x-twitter"></i>
-              <a 
-                href="https://www.linkedin.com/in/wiam-elkhoumari-b28343399/" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="social-link"
-              >
-              <i className="fab fa-linkedin-in"></i>
+              <a href="https://www.linkedin.com/in/wiam-elkhoumari-b28343399/"
+                target="_blank" rel="noopener noreferrer" className="social-link">
+                <i className="fab fa-linkedin-in"></i>
               </a>
             </div>
           </div>
@@ -54,7 +47,7 @@ export default function Footer() {
           </div>
 
           <div className="col-lg-5 col-md-12 mb-4 text-end">
-            <img 
+            <img
               src="/images/footerimg.png"
               className="footer-gallery-img"
               alt="Galerie Footer"
@@ -77,4 +70,57 @@ export default function Footer() {
       </div>
     </footer>
   );
+}
+
+function FooterMinimal() {
+  return (
+    <footer className="footer-minimal">
+      <div className="footer-minimal-inner">
+
+        {/* Icônes sociales */}
+        <div className="footer-minimal-social">
+          <a href="https://www.facebook.com/profile.php?id=61584894126989"
+            target="_blank" rel="noopener noreferrer"
+            className="footer-minimal-icon" aria-label="Facebook">
+            <i className="fab fa-facebook-f"></i>
+          </a>
+          <a href="#" className="footer-minimal-icon" aria-label="Twitter">
+            <i className="fab fa-x-twitter"></i>
+          </a>
+          <a href="#" className="footer-minimal-icon" aria-label="Instagram">
+            <i className="fab fa-instagram"></i>
+          </a>
+          <a href="https://www.linkedin.com/in/wiam-elkhoumari-b28343399/"
+            target="_blank" rel="noopener noreferrer"
+            className="footer-minimal-icon" aria-label="LinkedIn">
+            <i className="fab fa-linkedin-in"></i>
+          </a>
+        </div>
+
+        {/* Lien retour accueil */}
+        <div className="footer-minimal-back">
+          <Link to="/" className="footer-minimal-home">
+            ← Retour à l'accueil
+          </Link>
+        </div>
+
+        {/* Liens légaux */}
+        <div className="footer-minimal-links">
+          <span className="footer-minimal-link">Mentions légales</span>
+          <span className="footer-minimal-link">Confidentialité</span>
+          <span className="footer-minimal-link">CGU</span>
+        </div>
+
+      </div>
+    </footer>
+  );
+}
+
+export default function Footer() {
+  const location = useLocation();
+
+  // Footer complet uniquement sur la page d'accueil
+  const isHome = location.pathname === '/';
+
+  return isHome ? <FooterHome /> : <FooterMinimal />;
 }

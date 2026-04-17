@@ -13,7 +13,8 @@ import '../css/login.css';
 import '../css/inscription.css';
 import '../css/ArtistBiosSection.css';
 import '../css/temoignageSection.css';
-
+import "../css/Profile.module.css";
+import "../css/AdminKpis.css";
 
 
 const rootElement = document.getElementById('root');

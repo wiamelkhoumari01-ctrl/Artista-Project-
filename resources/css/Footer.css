@@ -101,3 +101,106 @@
     .footer-gallery-img { max-width: 100%; margin-top: 20px; }
     .text-md-end { text-align: left !important; margin-top: 10px; margin-left: -18px; }
 }
+
+/* ============================================================
+   FOOTER MINIMAL — Toutes les pages sauf l'accueil
+   ============================================================ */
+.footer-minimal {
+    background-color: #f4ece4;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 18px 0;
+}
+
+.footer-minimal-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+/* Icônes sociales */
+.footer-minimal-social {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-minimal-icon {
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    font-size: 13px;
+    text-decoration: none !important;
+    transition: all 0.2s ease;
+}
+
+.footer-minimal-icon:hover {
+    border-color: #c5a059;
+    color: #c5a059;
+    transform: translateY(-1px);
+}
+
+/* Lien retour accueil */
+.footer-minimal-back {
+    flex: 1;
+    text-align: center;
+}
+
+.footer-minimal-home {
+    font-size: 13px;
+    color: #666;
+    text-decoration: none !important;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.footer-minimal-home:hover {
+    color: #c5a059;
+}
+
+/* Liens légaux */
+.footer-minimal-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.footer-minimal-link {
+    font-size: 13px;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s;
+    white-space: nowrap;
+}
+
+.footer-minimal-link:hover {
+    color: #c5a059;
+}
+
+/* Responsive mobile */
+@media (max-width: 768px) {
+    .footer-minimal-inner {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+    }
+
+    .footer-minimal-back {
+        order: -1;
+    }
+
+    .footer-minimal-links {
+        gap: 14px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}

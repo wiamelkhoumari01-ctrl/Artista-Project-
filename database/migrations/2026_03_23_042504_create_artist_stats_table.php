@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('artist_id')->constrained()->onDelete('cascade');
             $table->date('date');
             $table->integer('views')->default(0);
-            $table->timestamps();
+            $table->integer('clicks')->default(0);
         });
     }
 
