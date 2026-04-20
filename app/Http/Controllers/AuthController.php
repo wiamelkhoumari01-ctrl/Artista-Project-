@@ -14,8 +14,9 @@ use Google_Client;
 
 class AuthController extends Controller
 {
-    // ── PLUS de "use HasApiTokens, Notifiable" ici ──
-
+    // ──────────────────────────────────────────────────────────────
+    // INSCRIPTION
+    // ──────────────────────────────────────────────────────────────
     public function inscription(Request $request)
     {
         $data = $request->validate([
@@ -37,7 +38,7 @@ class AuthController extends Controller
                 'email_verified_at' => now(),
             ]);
 
-            if ($data['role'] === 'artiste') {
+            if ($user->role === 'artiste') {
                 $this->createArtistProfile(
                     $user,
                     $data['first_name'],
@@ -52,11 +53,14 @@ class AuthController extends Controller
                 'success'      => true,
                 'access_token' => $token,
                 'user'         => $this->formatUserResponse($user),
-                'message'      => 'Compte créé avec succès !'
+                'message'      => 'Compte créé avec succès !',
             ], 201);
         });
     }
 
+    // ──────────────────────────────────────────────────────────────
+    // LOGIN
+    // ──────────────────────────────────────────────────────────────
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -64,24 +68,27 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($credentials)) {
-            $user  = Auth::user();
-            $token = $user->createToken('auth_token')->plainTextToken;
-
+        if (!Auth::attempt($credentials)) {
             return response()->json([
-                'success'      => true,
-                'access_token' => $token,
-                'user'         => $this->formatUserResponse($user),
-                'message'      => 'Heureux de vous revoir !',
-            ]);
+                'success' => false,
+                'message' => 'Email ou mot de passe incorrect.',
+            ], 401);
         }
 
+        $user  = Auth::user();
+        $token = $user->createToken('auth_token')->plainTextToken;
+
         return response()->json([
-            'success' => false,
-            'message' => 'Email ou mot de passe incorrect.',
-        ], 401);
+            'success'      => true,
+            'access_token' => $token,
+            'user'         => $this->formatUserResponse($user),
+            'message'      => 'Heureux de vous revoir !',
+        ]);
     }
 
+    // ──────────────────────────────────────────────────────────────
+    // GOOGLE AUTH
+    // ──────────────────────────────────────────────────────────────
     public function googleAuth(Request $request)
     {
         $request->validate([
@@ -96,29 +103,32 @@ class AuthController extends Controller
         if (!$payload) {
             return response()->json([
                 'success' => false,
-                'message' => 'Token Google invalide',
+                'message' => 'Token Google invalide.',
             ], 401);
         }
 
         return DB::transaction(function () use ($payload, $request) {
-            $email = $payload['email'];
-            $user  = User::where('email', $email)->first();
+            $email     = $payload['email'];
+            $firstName = $payload['given_name']  ?? 'Prénom';
+            $lastName  = $payload['family_name'] ?? 'Nom';
+
+            $user = User::where('email', $email)->first();
 
             if (!$user) {
                 $user = User::create([
                     'email'             => $email,
                     'password'          => Hash::make(Str::random(24)),
                     'role'              => $request->role,
-                    'first_name'        => $payload['given_name']  ?? 'Prénom',
-                    'last_name'         => $payload['family_name'] ?? 'Nom',
+                    'first_name'        => $firstName,
+                    'last_name'         => $lastName,
                     'email_verified_at' => now(),
                 ]);
 
                 if ($user->role === 'artiste') {
                     $this->createArtistProfile(
                         $user,
-                        $user->first_name,
-                        $user->last_name,
+                        $firstName,
+                        $lastName,
                         $request->locale ?? 'fr'
                     );
                 }
@@ -134,12 +144,18 @@ class AuthController extends Controller
         });
     }
 
+    // ──────────────────────────────────────────────────────────────
+    // LOGOUT
+    // ──────────────────────────────────────────────────────────────
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
-        return response()->json(['message' => 'Déconnecté avec succès']);
+        return response()->json(['message' => 'Déconnecté avec succès.']);
     }
 
+    // ──────────────────────────────────────────────────────────────
+    // MOT DE PASSE OUBLIÉ
+    // ──────────────────────────────────────────────────────────────
     public function forgotPassword(Request $request)
     {
         $request->validate(['email' => 'required|email']);
@@ -154,7 +170,6 @@ class AuthController extends Controller
         }
 
         $newPassword = $this->generatePassword(8);
-
         $user->update(['password' => Hash::make($newPassword)]);
         $user->tokens()->delete();
 
@@ -171,15 +186,64 @@ class AuthController extends Controller
         ]);
     }
 
+    // ──────────────────────────────────────────────────────────────
+    // RESET PASSWORD (non utilisé — gardé pour compatibilité routes)
+    // ──────────────────────────────────────────────────────────────
     public function resetPassword(Request $request)
     {
         return response()->json([
             'success' => false,
-            'message' => 'Utilisez la fonction "Mot de passe oublié" pour recevoir un nouveau mot de passe.',
+            'message' => 'Utilisez "Mot de passe oublié" pour recevoir un nouveau mot de passe.',
         ], 400);
     }
 
-    // ── Helpers privés ────────────────────────────────────────────────
+    // ──────────────────────────────────────────────────────────────
+    // HELPERS PRIVÉS
+    // ──────────────────────────────────────────────────────────────
+
+    /**
+     * Crée le profil artiste avec les champs JSON stage_name et bio
+     * CORRECTION : n'utilise pas translations() — stocke directement en JSON
+     */
+    private function createArtistProfile(User $user, string $firstName, string $lastName, string $locale): void
+{
+    // Anti-doublon strict
+    if (Artist::where('user_id', $user->id)->exists()) {
+        return;
+    }
+
+    $baseSlug = Str::slug($firstName . ' ' . $lastName);
+
+    do {
+        $slug = $baseSlug . '-' . Str::lower(Str::random(6));
+    } while (Artist::where('slug', $slug)->exists());
+
+    // CORRECTION : PAS de json_encode() — le cast 'array' du modèle gère tout
+    Artist::create([
+        'user_id'    => $user->id,
+        'country'    => 'Maroc',
+        'slug'       => $slug,
+        'stage_name' => [$locale => $firstName . ' ' . $lastName],
+        'bio'        => [$locale => ''],
+    ]);
+}
+    /**
+     * Formate la réponse utilisateur pour le frontend
+     * Inclut first_name, last_name et username pour la Navbar
+     */
+    private function formatUserResponse(User $user): array
+    {
+        return [
+            'id'         => $user->id,
+            'email'      => $user->email,
+            'role'       => $user->role,
+            'first_name' => $user->first_name,
+            'last_name'  => $user->last_name,
+            'username'   => $user->first_name
+                ? $user->first_name . ' ' . $user->last_name
+                : explode('@', $user->email)[0],
+        ];
+    }
 
     private function generatePassword(int $length = 8): string
     {
@@ -213,8 +277,7 @@ class AuthController extends Controller
   <p style="font-size:13px;color:#999;margin:0 0 32px;">ARTISTA — Récupération de compte</p>
   <p style="font-size:15px;margin:0 0 12px;">Bonjour <strong>{$name}</strong>,</p>
   <p style="font-size:15px;line-height:1.6;margin:0 0 24px;color:#555;">
-    Suite à votre demande de récupération pour <strong>{$email}</strong>,
-    voici votre nouveau mot de passe temporaire :
+    Suite à votre demande pour <strong>{$email}</strong>, voici votre nouveau mot de passe :
   </p>
   <p style="font-size:28px;font-weight:700;letter-spacing:6px;color:#1a1a1a;
             font-family:'Courier New',monospace;margin:0 0 24px;padding:16px 0;
@@ -231,31 +294,5 @@ class AuthController extends Controller
 </body>
 </html>
 HTML;
-    }
-
-    private function createArtistProfile($user, $firstName, $lastName, $locale)
-    {
-        $baseSlug = Str::slug($firstName . ' ' . $lastName);
-        $slug     = $baseSlug . '-' . Str::lower(Str::random(5));
-
-        Artist::create([
-            'user_id'    => $user->id,
-            'country'    => 'Maroc',
-            'slug'       => $slug,
-            'stage_name' => [$locale => $firstName . ' ' . $lastName],
-            'bio'        => [$locale => ''],
-        ]);
-    }
-
-    private function formatUserResponse($user)
-    {
-        return [
-            'id'         => $user->id,
-            'email'      => $user->email,
-            'role'       => $user->role,
-            'first_name' => $user->first_name,
-            'last_name'  => $user->last_name,
-            'username'   => explode('@', $user->email)[0],
-        ];
     }
 }

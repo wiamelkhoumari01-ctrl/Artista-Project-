@@ -13,7 +13,8 @@ class ArtWorkController extends Controller
 {
     public function getMyArtworks(Request $request)
     {
-        $artist = $request->user()->artist;
+        // Cherche par user_id — jamais par relation ambiguë
+        $artist = Artist::where('user_id', $request->user()->id)->first();
         if (!$artist) return response()->json([], 404);
 
         $artworks = Artwork::where('artist_id', $artist->id)
@@ -34,8 +35,7 @@ class ArtWorkController extends Controller
 
         if (!$artist) return response()->json(['message' => 'Profil non trouvé'], 404);
 
-        // Résout l'URL image pour affichage immédiat dans Profile.jsx
-        $artistArray = $artist->toArray();
+        $artistArray              = $artist->toArray();
         $artistArray['image_url'] = $this->resolveImageUrl($artist->image_url);
 
         return response()->json($artistArray);
@@ -54,7 +54,8 @@ class ArtWorkController extends Controller
         ]);
 
         $user   = $request->user();
-        $artist = $user->artist()->firstOrFail();
+        // Cherche strictement par user_id — jamais $user->artist() qui peut pointer vers l'admin
+        $artist = Artist::where('user_id', $user->id)->firstOrFail();
         $folder = 'artistes/' . $artist->slug;
 
         $artwork = Artwork::create([
@@ -92,34 +93,34 @@ class ArtWorkController extends Controller
     }
 
     public function update(Request $request, $id)
-{
-    $artist  = $request->user()->artist;
-    $artwork = Artwork::findOrFail($id);
+    {
+        $artist  = Artist::where('user_id', $request->user()->id)->firstOrFail();
+        $artwork = Artwork::findOrFail($id);
 
-    if ($artwork->artist_id !== $artist->id) {
-        return response()->json(['message' => 'Non autorisé'], 403);
+        if ($artwork->artist_id !== $artist->id) {
+            return response()->json(['message' => 'Non autorisé'], 403);
+        }
+
+        $request->validate([
+            'title'         => 'required|array',
+            'description'   => 'nullable|array',
+            'category_id'   => 'nullable|exists:categories,id',
+            'date_creation' => 'nullable|date',
+        ]);
+
+        $artwork->update([
+            'title'         => $request->title,
+            'description'   => $request->description ?? $artwork->description,
+            'category_id'   => $request->category_id  ?? $artwork->category_id,
+            'date_creation' => $request->date_creation ?? $artwork->date_creation,
+        ]);
+
+        return response()->json(['message' => 'Œuvre modifiée', 'artwork' => $artwork]);
     }
-
-    $request->validate([
-        'title'         => 'required|array',
-        'description'   => 'nullable|array',
-        'category_id'   => 'nullable|exists:categories,id',
-        'date_creation' => 'nullable|date',
-    ]);
-
-    $artwork->update([
-        'title'         => $request->title,
-        'description'   => $request->description ?? $artwork->description,
-        'category_id'   => $request->category_id  ?? $artwork->category_id,
-        'date_creation' => $request->date_creation ?? $artwork->date_creation,
-    ]);
-
-    return response()->json(['message' => 'Œuvre modifiée', 'artwork' => $artwork]);
-}
 
     public function destroy($id, Request $request)
     {
-        $artist  = $request->user()->artist;
+        $artist  = Artist::where('user_id', $request->user()->id)->firstOrFail();
         $artwork = Artwork::with('images')->findOrFail($id);
 
         if ($artwork->artist_id !== $artist->id) {
@@ -129,6 +130,7 @@ class ArtWorkController extends Controller
         foreach ($artwork->images as $img) {
             Storage::disk('public')->delete($img->path);
         }
+
         if ($artwork->image_url && !str_starts_with($artwork->image_url, '/images/')) {
             Storage::disk('public')->delete($artwork->image_url);
         }

@@ -124,163 +124,176 @@ class ArtistController extends Controller
     }
 
     public function updateProfile(Request $request)
-    {
-        $user = $request->user();
+{
+    $user = $request->user();
 
-        $request->validate([
-            'stage_name'  => 'nullable|array',
-            'bio'         => 'nullable|array',
-            'specialite'  => 'nullable|array',
-            'category_id' => 'nullable|exists:categories,id',
-            'city'        => 'nullable|string|max:100',
-            'country'     => 'nullable|string|max:100',
-            'phone'       => 'nullable|string|max:30',
-            'website'     => 'nullable|string|max:255',
-        ]);
+    $request->validate([
+        'stage_name'  => 'nullable|array',
+        'bio'         => 'nullable|array',
+        'specialite'  => 'nullable|array',
+        'category_id' => 'nullable|exists:categories,id',
+        'city'        => 'nullable|string|max:100',
+        'country'     => 'nullable|string|max:100',
+        'phone'       => 'nullable|string|max:30',
+        'website'     => 'nullable|string|max:255',
+    ]);
 
-        $existingArtist = $user->artist;
-        $stageName      = $request->stage_name;
+    // CORRECTION : cherche par user_id directement — jamais $user->artist
+    $existingArtist = Artist::where('user_id', $user->id)->first();
+    $stageName      = $request->stage_name;
 
-        if (!$existingArtist) {
-            $base = $stageName ? ($stageName['fr'] ?? $user->first_name) : $user->first_name;
-            $slug = Str::slug($base) . '-' . Str::lower(Str::random(4));
-        } else {
-            $slug = $existingArtist->slug;
-        }
-
-        $data = ['slug' => $slug];
-        if ($request->has('stage_name'))  $data['stage_name']  = $stageName;
-        if ($request->has('bio'))         $data['bio']          = $request->bio;
-        if ($request->has('specialite'))  $data['specialite']   = $request->specialite;
-        if ($request->has('category_id')) $data['category_id']  = $request->category_id;
-        if ($request->has('city'))        $data['city']         = $request->city;
-        if ($request->has('country'))     $data['country']      = $request->country;
-        if ($request->has('phone'))       $data['phone']        = $request->phone;
-        if ($request->has('website'))     $data['website']      = $request->website;
-
-        $artist = Artist::updateOrCreate(['user_id' => $user->id], $data);
-
-        return response()->json(['message' => 'Profil mis à jour', 'artist' => $artist]);
+    if ($existingArtist) {
+        $slug = $existingArtist->slug;
+    } else {
+        $base = $stageName ? ($stageName['fr'] ?? $user->first_name) : $user->first_name;
+        do {
+            $slug = Str::slug($base) . '-' . Str::lower(Str::random(5));
+        } while (Artist::where('slug', $slug)->exists());
     }
+
+    $data = ['slug' => $slug];
+    if ($request->has('stage_name'))  $data['stage_name']  = $stageName;
+    if ($request->has('bio'))         $data['bio']          = $request->bio;
+    if ($request->has('specialite'))  $data['specialite']   = $request->specialite;
+    if ($request->has('category_id')) $data['category_id']  = $request->category_id;
+    if ($request->has('city'))        $data['city']         = $request->city;
+    if ($request->has('country'))     $data['country']      = $request->country;
+    if ($request->has('phone'))       $data['phone']        = $request->phone;
+    if ($request->has('website'))     $data['website']      = $request->website;
+
+    // updateOrCreate cherche STRICTEMENT par user_id du token
+    $artist = Artist::updateOrCreate(
+        ['user_id' => $user->id],
+        $data
+    );
+
+    return response()->json(['message' => 'Profil mis à jour', 'artist' => $artist]);
+}
 
     public function uploadPhoto(Request $request)
-    {
-        $request->validate([
-            'photo' => 'required|file|image|mimes:jpeg,png,jpg,webp|max:4096',
-        ]);
+{
+    $request->validate([
+        'photo' => 'required|file|image|mimes:jpeg,png,jpg,webp|max:4096',
+    ]);
 
-        $user   = $request->user();
-        $artist = $user->artist;
+    $user   = $request->user();
+    // CORRECTION : cherche par user_id directement
+    $artist = Artist::where('user_id', $user->id)->first();
 
-        if (!$artist) return response()->json(['message' => 'Profil artiste inexistant'], 404);
-
-        if ($artist->image_url && !str_starts_with($artist->image_url, '/images/')) {
-            Storage::disk('public')->delete($artist->image_url);
-        }
-
-        $manager  = new ImageManager(new Driver());
-        $folder   = 'artistes/' . $artist->slug;
-        $filename = 'profil_' . time() . '.webp';
-        $path     = $folder . '/' . $filename;
-
-        $encoded = $manager->read($request->file('photo'))
-            ->cover(500, 500)
-            ->toWebp(85);
-
-        Storage::disk('public')->put($path, (string) $encoded);
-        $artist->update(['image_url' => $path]);
-
-        return response()->json([
-            'message'   => 'Photo mise à jour avec succès',
-            'image_url' => asset('storage/' . $path),
-        ]);
+    if (!$artist) {
+        return response()->json(['message' => 'Profil artiste inexistant'], 404);
     }
+
+    if ($artist->image_url && !str_starts_with($artist->image_url, '/images/')) {
+        Storage::disk('public')->delete($artist->image_url);
+    }
+
+    $manager  = new ImageManager(new Driver());
+    $folder   = 'artistes/' . $artist->slug;
+    $filename = 'profil_' . time() . '.webp';
+    $path     = $folder . '/' . $filename;
+
+    $encoded = $manager->read($request->file('photo'))
+        ->cover(500, 500)
+        ->toWebp(85);
+
+    Storage::disk('public')->put($path, (string) $encoded);
+    $artist->update(['image_url' => $path]);
+
+    return response()->json([
+        'message'   => 'Photo mise à jour avec succès',
+        'image_url' => asset('storage/' . $path),
+    ]);
+}
 
     public function getMyEvents(Request $request)
-    {
-        $artist = $request->user()->artist;
-        if (!$artist) return response()->json([], 200);
-        return response()->json($artist->events()->orderBy('start_date', 'asc')->get());
-    }
+{
+    // CORRECTION : cherche par user_id directement
+    $artist = Artist::where('user_id', $request->user()->id)->first();
+    if (!$artist) return response()->json([], 200);
+    return response()->json($artist->events()->orderBy('start_date', 'asc')->get());
+}
 
-    public function storeEvent(Request $request)
-    {
-        $request->validate([
-            'type'         => 'required|in:Exposition,Atelier,Concert,Festival',
-            'title'        => 'required|array',
-            'title.fr'     => 'required|string',
-            'venue_name'   => 'required|string|max:255',
-            'start_date'   => 'required|date',
-            'end_date'     => 'required|date|after_or_equal:start_date',
-            'description'  => 'nullable|array',
-            'location_url' => 'nullable|string|max:500',
-        ]);
+public function storeEvent(Request $request)
+{
+    $request->validate([
+        'type'         => 'required|in:Exposition,Atelier,Concert,Festival',
+        'title'        => 'required|array',
+        'title.fr'     => 'required|string',
+        'venue_name'   => 'required|string|max:255',
+        'start_date'   => 'required|date',
+        'end_date'     => 'required|date|after_or_equal:start_date',
+        'description'  => 'nullable|array',
+        'location_url' => 'nullable|string|max:500',
+    ]);
 
-        $artist = $request->user()->artist;
-        if (!$artist) return response()->json(['message' => 'Profil artiste requis'], 403);
+    // CORRECTION : cherche par user_id directement
+    $artist = Artist::where('user_id', $request->user()->id)->first();
+    if (!$artist) return response()->json(['message' => 'Profil artiste requis'], 403);
 
-        $event = Event::create([
-            'type'         => $request->type,
-            'title'        => $request->title,
-            'description'  => $request->description ?? [],
-            'venue_name'   => $request->venue_name,
-            'start_date'   => $request->start_date,
-            'end_date'     => $request->end_date,
-            'location_url' => $request->location_url,
-        ]);
+    $event = Event::create([
+        'type'         => $request->type,
+        'title'        => $request->title,
+        'description'  => $request->description ?? [],
+        'venue_name'   => $request->venue_name,
+        'start_date'   => $request->start_date,
+        'end_date'     => $request->end_date,
+        'location_url' => $request->location_url,
+    ]);
 
-        $event->artists()->attach($artist->id);
-
-        return response()->json(['message' => 'Événement créé', 'event' => $event], 201);
-    }
+    $event->artists()->attach($artist->id);
+    return response()->json(['message' => 'Événement créé', 'event' => $event], 201);
+}
 
     public function updateEvent(Request $request, $id)
-    {
-        $artist = $request->user()->artist;
-        $event  = Event::findOrFail($id);
+{
+    // CORRECTION : cherche par user_id directement
+    $artist = Artist::where('user_id', $request->user()->id)->first();
+    $event  = Event::findOrFail($id);
 
-        if (!$event->artists()->where('artists.id', $artist->id)->exists()) {
-            return response()->json(['message' => 'Non autorisé'], 403);
-        }
-
-        $request->validate([
-            'type'         => 'required|in:Exposition,Atelier,Concert,Festival',
-            'title'        => 'required|array',
-            'title.fr'     => 'required|string',
-            'venue_name'   => 'required|string|max:255',
-            'start_date'   => 'required|date',
-            'end_date'     => 'required|date|after_or_equal:start_date',
-            'description'  => 'nullable|array',
-            'location_url' => 'nullable|string|max:500',
-        ]);
-
-        $event->update([
-            'type'         => $request->type,
-            'title'        => $request->title,
-            'description'  => $request->description ?? [],
-            'venue_name'   => $request->venue_name,
-            'start_date'   => $request->start_date,
-            'end_date'     => $request->end_date,
-            'location_url' => $request->location_url,
-        ]);
-
-        return response()->json(['message' => 'Événement modifié', 'event' => $event]);
+    if (!$event->artists()->where('artists.id', $artist->id)->exists()) {
+        return response()->json(['message' => 'Non autorisé'], 403);
     }
 
-    public function deleteEvent(Request $request, $id)
-    {
-        $artist = $request->user()->artist;
-        $event  = Event::findOrFail($id);
+    $request->validate([
+        'type'         => 'required|in:Exposition,Atelier,Concert,Festival',
+        'title'        => 'required|array',
+        'title.fr'     => 'required|string',
+        'venue_name'   => 'required|string|max:255',
+        'start_date'   => 'required|date',
+        'end_date'     => 'required|date|after_or_equal:start_date',
+        'description'  => 'nullable|array',
+        'location_url' => 'nullable|string|max:500',
+    ]);
 
-        if (!$event->artists()->where('artists.id', $artist->id)->exists()) {
-            return response()->json(['message' => 'Non autorisé'], 403);
-        }
+    $event->update([
+        'type'         => $request->type,
+        'title'        => $request->title,
+        'description'  => $request->description ?? [],
+        'venue_name'   => $request->venue_name,
+        'start_date'   => $request->start_date,
+        'end_date'     => $request->end_date,
+        'location_url' => $request->location_url,
+    ]);
 
-        $event->artists()->detach($artist->id);
-        if ($event->artists()->count() === 0) $event->delete();
+    return response()->json(['message' => 'Événement modifié', 'event' => $event]);
+}
 
-        return response()->json(['message' => 'Événement supprimé']);
+public function deleteEvent(Request $request, $id)
+{
+    // CORRECTION : cherche par user_id directement
+    $artist = Artist::where('user_id', $request->user()->id)->first();
+    $event  = Event::findOrFail($id);
+
+    if (!$event->artists()->where('artists.id', $artist->id)->exists()) {
+        return response()->json(['message' => 'Non autorisé'], 403);
     }
+
+    $event->artists()->detach($artist->id);
+    if ($event->artists()->count() === 0) $event->delete();
+
+    return response()->json(['message' => 'Événement supprimé']);
+}
 
     public function getStats(Request $request)
 {

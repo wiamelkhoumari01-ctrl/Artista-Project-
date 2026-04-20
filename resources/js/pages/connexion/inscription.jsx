@@ -8,7 +8,7 @@ import { useAuth } from '../../context/AuthContext';
 import OnboardingModal from './OnboardingModal';
 
 // Client ID Google — fixe pour éviter tout problème de variable d'env Vite
-const GOOGLE_CLIENT_ID = '832417069767-tumkpqutir1v6juarh1ugv4h9fr9cvk8.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = '832417069767-kfrrgdsmak62j88apqk6glrbsgison49.apps.googleusercontent.com';
 
 export default function Inscription() {
   const navigate = useNavigate();
