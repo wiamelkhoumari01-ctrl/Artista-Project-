@@ -131,6 +131,7 @@ class ArtistMockSeeder extends Seeder
                 'role'              => 'artiste',
                 'locale'            => 'fr',
                 'email_verified_at' => now(),
+                'remember_token'    => \Illuminate\Support\Str::random(10),
             ]);
 
             $artist = Artist::create([
@@ -148,7 +149,6 @@ class ArtistMockSeeder extends Seeder
                     'en' => $this->translateCat($m['cat'], 'en'),
                 ],
                 'views_count'  => rand(100, 5000),
-                'clicks_count' => rand(20, 500),
             ]);
 
             // Œuvres (2 par artiste)

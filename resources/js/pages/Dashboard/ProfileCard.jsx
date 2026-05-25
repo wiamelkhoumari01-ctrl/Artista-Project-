@@ -30,8 +30,9 @@ export default function ProfileCard({ artistData, setArtistData, flash, locale, 
       const res = await api.post('/api/artist/upload-photo', fd, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      // L'API retourne l'URL complète déjà résolue
-      setArtistData(prev => ({ ...prev, image_url: res.data.image_url }));
+      if (res.data?.image_url) {
+        setArtistData(prev => ({ ...prev, image_url: res.data.image_url }));
+      }
       setPhotoFile(null);
       setPhotoPreview(null);
       flash('Photo de profil mise à jour !');

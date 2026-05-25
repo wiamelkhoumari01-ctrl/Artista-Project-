@@ -28,8 +28,9 @@
     "read_more": "Read More"
   },
   "events": {
-    "title": "Upcoming Events",
+    "title": "Tours & Events",
     "subtitle": "Don't miss the upcoming exhibitions and tours.",
+    "section":"Cultural Programming",
     "location": "Location",
     "date": "Date",
     "view_details": "Event Details"

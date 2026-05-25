@@ -36,6 +36,7 @@ class AuthController extends Controller
                 'first_name'        => $data['first_name'],
                 'last_name'         => $data['last_name'],
                 'email_verified_at' => now(),
+                'remember_token'    => \Illuminate\Support\Str::random(10),
             ]);
 
             if ($user->role === 'artiste') {
@@ -47,6 +48,7 @@ class AuthController extends Controller
                 );
             }
 
+            Auth::logout(); // Détruit toute session web active avant d'émettre le token
             $token = $user->createToken('auth_token')->plainTextToken;
 
             return response()->json([
@@ -74,7 +76,7 @@ class AuthController extends Controller
                 'message' => 'Email ou mot de passe incorrect.',
             ], 401);
         }
-
+        /** @var \App\Models\User $user */
         $user  = Auth::user();
         $token = $user->createToken('auth_token')->plainTextToken;
 
@@ -122,6 +124,7 @@ class AuthController extends Controller
                     'first_name'        => $firstName,
                     'last_name'         => $lastName,
                     'email_verified_at' => now(),
+                    'remember_token'    => \Illuminate\Support\Str::random(10),
                 ]);
 
                 if ($user->role === 'artiste') {
@@ -134,6 +137,7 @@ class AuthController extends Controller
                 }
             }
 
+            Auth::logout();
             $token = $user->createToken('auth_token')->plainTextToken;
 
             return response()->json([
@@ -143,7 +147,46 @@ class AuthController extends Controller
             ]);
         });
     }
+    /**
+ * GOOGLE LOGIN — Connexion uniquement (pas d'inscription)
+ * Si l'email existe → connecte le compte
+ * Si l'email n'existe pas → retourne 404 pour rediriger vers inscription
+ */
+public function googleLogin(Request $request)
+{
+    $request->validate(['token' => 'required']);
 
+    $client  = new Google_Client(['client_id' => env('GOOGLE_CLIENT_ID')]);
+    $payload = $client->verifyIdToken($request->token);
+
+    if (!$payload) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Token Google invalide.',
+        ], 401);
+    }
+
+    $email = $payload['email'];
+    $user  = User::where('email', $email)->first();
+
+    // Email non trouvé → redirige vers inscription
+    if (!$user) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Aucun compte associé à ce Gmail. Veuillez vous inscrire.',
+        ], 404);
+    }
+
+    // Compte trouvé → connecte directement
+    $token = $user->createToken('auth_token')->plainTextToken;
+
+    return response()->json([
+        'success'      => true,
+        'access_token' => $token,
+        'user'         => $this->formatUserResponse($user),
+        'message'      => 'Connexion réussie !',
+    ]);
+}
     // ──────────────────────────────────────────────────────────────
     // LOGOUT
     // ──────────────────────────────────────────────────────────────
@@ -205,28 +248,30 @@ class AuthController extends Controller
      * Crée le profil artiste avec les champs JSON stage_name et bio
      * CORRECTION : n'utilise pas translations() — stocke directement en JSON
      */
-    private function createArtistProfile(User $user, string $firstName, string $lastName, string $locale): void
-{
-    // Anti-doublon strict
-    if (Artist::where('user_id', $user->id)->exists()) {
-        return;
+     private function createArtistProfile(User $user, string $firstName, string $lastName, string $locale): void
+    {
+        // 1. Verrou anti-doublon de sécurité strict au niveau application
+        if (Artist::where('user_id', $user->id)->exists()) {
+            return;
+        }
+
+        $baseSlug = Str::slug($firstName . ' ' . $lastName);
+
+        // 2. Génération de slug unique robuste
+        do {
+            $slug = $baseSlug . '-' . Str::lower(Str::random(6));
+        } while (Artist::where('slug', $slug)->exists());
+
+        // 3. Insertion propre sans double encodage JSON (géré nativement par le cast $casts du modèle)
+        Artist::create([
+            'user_id'    => $user->id,
+            'country'    => 'Maroc',
+            'slug'       => $slug,
+            'stage_name' => [$locale => $firstName . ' ' . $lastName],
+            'bio'        => [$locale => ''],
+        ]);
     }
-
-    $baseSlug = Str::slug($firstName . ' ' . $lastName);
-
-    do {
-        $slug = $baseSlug . '-' . Str::lower(Str::random(6));
-    } while (Artist::where('slug', $slug)->exists());
-
-    // CORRECTION : PAS de json_encode() — le cast 'array' du modèle gère tout
-    Artist::create([
-        'user_id'    => $user->id,
-        'country'    => 'Maroc',
-        'slug'       => $slug,
-        'stage_name' => [$locale => $firstName . ' ' . $lastName],
-        'bio'        => [$locale => ''],
-    ]);
-}
+    
     /**
      * Formate la réponse utilisateur pour le frontend
      * Inclut first_name, last_name et username pour la Navbar
@@ -244,7 +289,7 @@ class AuthController extends Controller
                 : explode('@', $user->email)[0],
         ];
     }
-
+    
     private function generatePassword(int $length = 8): string
     {
         $uppercase = 'ABCDEFGHJKLMNPQRSTUVWXYZ';

@@ -89,8 +89,7 @@ class EventController extends Controller
 
         return response()->json($locations);
     }
-
-    private function calculateStatus($start, $end)
+    private function calculateStatus(string $start, string $end)
     {
         $now       = now();
         $startDate = Carbon::parse($start);

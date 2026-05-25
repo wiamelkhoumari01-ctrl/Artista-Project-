@@ -92,7 +92,7 @@ class ArtWorkController extends Controller
         ], 201);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request,int $id)
     {
         $artist  = Artist::where('user_id', $request->user()->id)->firstOrFail();
         $artwork = Artwork::findOrFail($id);
@@ -118,7 +118,7 @@ class ArtWorkController extends Controller
         return response()->json(['message' => 'Œuvre modifiée', 'artwork' => $artwork]);
     }
 
-    public function destroy($id, Request $request)
+    public function destroy(int $id, Request $request)
     {
         $artist  = Artist::where('user_id', $request->user()->id)->firstOrFail();
         $artwork = Artwork::with('images')->findOrFail($id);

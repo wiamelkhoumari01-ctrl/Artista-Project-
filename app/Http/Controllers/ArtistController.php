@@ -45,7 +45,7 @@ class ArtistController extends Controller
     /**
      * Détail artiste — incrémente les vues à chaque consultation
      */
-    public function show(Request $request, $slug)
+    public function show(Request $request, string $slug)
     {
         $locale = $request->query('lang', 'fr');
         $artist = Artist::where('slug', $slug)
@@ -123,88 +123,116 @@ class ArtistController extends Controller
         ]);
     }
 
-    public function updateProfile(Request $request)
-{
-    $user = $request->user();
+     public function updateProfile(Request $request)
+    {
+        // FORCE Sanctum à identifier l'utilisateur via le Bearer Token, ignore la session Cookie admin
+        $user = $request->user('sanctum'); 
 
-    $request->validate([
-        'stage_name'  => 'nullable|array',
-        'bio'         => 'nullable|array',
-        'specialite'  => 'nullable|array',
-        'category_id' => 'nullable|exists:categories,id',
-        'city'        => 'nullable|string|max:100',
-        'country'     => 'nullable|string|max:100',
-        'phone'       => 'nullable|string|max:30',
-        'website'     => 'nullable|string|max:255',
-    ]);
+        if (!$user) {
+            return response()->json(['message' => 'Non authentifié via API'], 401);
+        }
 
-    // CORRECTION : cherche par user_id directement — jamais $user->artist
-    $existingArtist = Artist::where('user_id', $user->id)->first();
-    $stageName      = $request->stage_name;
+        $request->validate([
+            'stage_name'  => 'nullable|array',
+            'bio'         => 'nullable|array',
+            'specialite'  => 'nullable|array',
+            'category_id' => 'nullable|exists:categories,id',
+            'city'        => 'nullable|string|max:100',
+            'country'     => 'nullable|string|max:100',
+            'phone'       => 'nullable|string|max:30',
+            'website'     => 'nullable|string|max:255',
+        ]);
 
-    if ($existingArtist) {
-        $slug = $existingArtist->slug;
-    } else {
-        $base = $stageName ? ($stageName['fr'] ?? $user->first_name) : $user->first_name;
-        do {
-            $slug = Str::slug($base) . '-' . Str::lower(Str::random(5));
-        } while (Artist::where('slug', $slug)->exists());
+        $existingArtist = Artist::where('user_id', $user->id)->first();
+        $stageName      = $request->stage_name;
+
+        if ($existingArtist) {
+            $slug = $existingArtist->slug;
+        } else {
+            $base = $stageName ? ($stageName['fr'] ?? $user->first_name) : $user->first_name;
+            do {
+                $slug = Str::slug($base) . '-' . Str::lower(Str::random(5));
+            } while (Artist::where('slug', $slug)->exists());
+        }
+
+        $data = ['slug' => $slug];
+        if ($request->has('stage_name'))  $data['stage_name']  = $stageName;
+        if ($request->has('bio'))         $data['bio']          = $request->bio;
+        if ($request->has('specialite'))  $data['specialite']   = $request->specialite;
+        if ($request->has('category_id')) {
+                $data['category_id'] = $request->category_id;
+                // Synchronise specialite avec le nom de la catégorie sélectionnée
+                if ($request->category_id) {
+                    $cat = \App\Models\Category::find($request->category_id);
+                    if ($cat) {
+                        $data['specialite'] = is_array($cat->name)
+                            ? $cat->name
+                            : ['fr' => $cat->name, 'en' => $cat->name, 'ar' => $cat->name];
+                    }
+                }
+            }
+        if ($request->has('city'))        $data['city']         = $request->city;
+        if ($request->has('country'))     $data['country']      = $request->country;
+        if ($request->has('phone'))       $data['phone']        = $request->phone;
+        if ($request->has('website'))     $data['website']      = $request->website;
+
+        // Mise à jour ou création blindée sur l'ID de l'artiste fraîchement authentifié
+        $artist = Artist::updateOrCreate(
+            ['user_id' => $user->id],
+            $data
+        );
+
+        return response()->json(['message' => 'Profil mis à jour', 'artist' => $artist]);
     }
-
-    $data = ['slug' => $slug];
-    if ($request->has('stage_name'))  $data['stage_name']  = $stageName;
-    if ($request->has('bio'))         $data['bio']          = $request->bio;
-    if ($request->has('specialite'))  $data['specialite']   = $request->specialite;
-    if ($request->has('category_id')) $data['category_id']  = $request->category_id;
-    if ($request->has('city'))        $data['city']         = $request->city;
-    if ($request->has('country'))     $data['country']      = $request->country;
-    if ($request->has('phone'))       $data['phone']        = $request->phone;
-    if ($request->has('website'))     $data['website']      = $request->website;
-
-    // updateOrCreate cherche STRICTEMENT par user_id du token
-    $artist = Artist::updateOrCreate(
-        ['user_id' => $user->id],
-        $data
-    );
-
-    return response()->json(['message' => 'Profil mis à jour', 'artist' => $artist]);
-}
 
     public function uploadPhoto(Request $request)
-{
-    $request->validate([
-        'photo' => 'required|file|image|mimes:jpeg,png,jpg,webp|max:4096',
-    ]);
+    {
+        $request->validate([
+            'photo' => 'required|file|image|mimes:jpeg,png,jpg,webp|max:4096',
+        ]);
 
-    $user   = $request->user();
-    // CORRECTION : cherche par user_id directement
-    $artist = Artist::where('user_id', $user->id)->first();
+       $user = $request->user('sanctum') ?? $request->user();
+        if (!$user) {
+            return response()->json(['message' => 'Non authentifié via API'], 401);
+        }
+        $artist = Artist::where('user_id', $user->id)->first(); 
+        if (!$artist) {
+            // Crée un profil minimal si inexistant
+            $base = $user->first_name ?? 'artiste';
+            do {
+                $slug = \Illuminate\Support\Str::slug($base) . '-' . \Illuminate\Support\Str::lower(\Illuminate\Support\Str::random(6));
+            } while (Artist::where('slug', $slug)->exists());
 
-    if (!$artist) {
-        return response()->json(['message' => 'Profil artiste inexistant'], 404);
+            $artist = Artist::create([
+                'user_id'    => $user->id,
+                'slug'       => $slug,
+                'stage_name' => ['fr' => $user->first_name . ' ' . $user->last_name],
+                'bio'        => ['fr' => ''],
+                'country'    => 'Maroc',
+            ]);
+        }
+
+        if ($artist->image_url && !str_starts_with($artist->image_url, '/images/')) {
+            Storage::disk('public')->delete($artist->image_url);
+        }
+
+        $manager  = new ImageManager(new Driver());
+        $folder   = 'artistes/' . $artist->slug;
+        $filename = 'profil_' . time() . '.webp';
+        $path     = $folder . '/' . $filename;
+
+        $encoded = $manager->read($request->file('photo'))
+            ->cover(500, 500)
+            ->toWebp(85);
+
+        Storage::disk('public')->put($path, (string) $encoded);
+        $artist->update(['image_url' => $path]);
+
+        return response()->json([
+            'message'   => 'Photo mise à jour avec succès',
+            'image_url' => asset('storage/' . $path),
+        ]);
     }
-
-    if ($artist->image_url && !str_starts_with($artist->image_url, '/images/')) {
-        Storage::disk('public')->delete($artist->image_url);
-    }
-
-    $manager  = new ImageManager(new Driver());
-    $folder   = 'artistes/' . $artist->slug;
-    $filename = 'profil_' . time() . '.webp';
-    $path     = $folder . '/' . $filename;
-
-    $encoded = $manager->read($request->file('photo'))
-        ->cover(500, 500)
-        ->toWebp(85);
-
-    Storage::disk('public')->put($path, (string) $encoded);
-    $artist->update(['image_url' => $path]);
-
-    return response()->json([
-        'message'   => 'Photo mise à jour avec succès',
-        'image_url' => asset('storage/' . $path),
-    ]);
-}
 
     public function getMyEvents(Request $request)
 {
@@ -245,7 +273,7 @@ public function storeEvent(Request $request)
     return response()->json(['message' => 'Événement créé', 'event' => $event], 201);
 }
 
-    public function updateEvent(Request $request, $id)
+    public function updateEvent(Request $request, int $id)
 {
     // CORRECTION : cherche par user_id directement
     $artist = Artist::where('user_id', $request->user()->id)->first();
@@ -279,7 +307,7 @@ public function storeEvent(Request $request)
     return response()->json(['message' => 'Événement modifié', 'event' => $event]);
 }
 
-public function deleteEvent(Request $request, $id)
+public function deleteEvent(Request $request,int $id)
 {
     // CORRECTION : cherche par user_id directement
     $artist = Artist::where('user_id', $request->user()->id)->first();
@@ -335,7 +363,7 @@ public function deleteEvent(Request $request, $id)
         return asset('storage/' . $path);
     }
 
-    private function fromJson($field, string $locale): string
+    private function fromJson(mixed $field, string $locale): string
     {
         if (!$field) return '';
         if (is_array($field)) return $field[$locale] ?? $field['fr'] ?? $field['en'] ?? '';
@@ -369,4 +397,5 @@ public function deleteEvent(Request $request, $id)
             ] : null,
         ];
     }
+    
 }

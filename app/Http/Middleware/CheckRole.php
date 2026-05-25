@@ -8,16 +8,29 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CheckRole
 {
-    public function handle(Request $request, Closure $next, ...$roles): Response
+    public function handle(Request $request, Closure $next,string ...$roles): Response
     {
-        // 1. Vérifier si l'utilisateur est connecté
-        if (!$request->user()) {
+        // Récupère l'utilisateur via le token Bearer explicitement
+        $user = $request->user('sanctum');
+
+        // Fallback sur l'utilisateur de la requête si pas de token Bearer
+        if (!$user) {
+            $user = $request->user();
+        }
+
+        if (!$user) {
             return response()->json(['message' => 'Non authentifié'], 401);
         }
 
-        // 2. Vérifier si son rôle est dans la liste autorisée
-        if (!in_array($request->user()->role, $roles)) {
-            return response()->json(['message' => 'Accès interdit : rôle insuffisant'], 403);
+        // Recharge le rôle depuis la BDD pour éviter le cache session
+        $user->refresh();
+
+        if (!in_array($user->role, $roles)) {
+            return response()->json([
+                'message' => 'Accès interdit : rôle insuffisant',
+                'role_actuel' => $user->role,
+                'roles_requis' => $roles,
+            ], 403);
         }
 
         return $next($request);

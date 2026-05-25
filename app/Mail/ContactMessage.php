@@ -14,9 +14,9 @@ class ContactMessage extends Mailable
     use Queueable, SerializesModels;
 
     // Cette variable sera accessible dans ton fichier markdown emails.contact
-    public $data;
+    public array $data;
 
-    public function __construct($data)
+    public function __construct(array $data)
     {
         $this->data = $data;
     }

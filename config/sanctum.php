@@ -15,12 +15,19 @@ return [
     |
     */
 
-    'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
-        '%s%s',
-        'localhost,localhost:3000,127.0.0.1,127.0.0.1:8000,::1',
-        Sanctum::currentApplicationUrlWithPort(),
-        // Sanctum::currentRequestHost(),
-    ))),
+    'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS',
+    '127.0.0.1:8000,localhost:8000'
+)),
+
+'guard' => ['web'],
+
+'expiration' => null,
+
+'middleware' => [
+    'authenticate_session' => Laravel\Sanctum\Http\Middleware\AuthenticateSession::class,
+    'encrypt_cookies' => Illuminate\Cookie\Middleware\EncryptCookies::class,
+    'validate_csrf_token' => Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
+],
 
     /*
     |--------------------------------------------------------------------------
@@ -34,18 +41,6 @@ return [
     |
     */
 
-    'guards' => [
-    'web' => [
-        'driver' => 'session',
-        'provider' => 'users',
-    ],
-
-    'api' => [
-        'driver' => 'sanctum', // 🔥 OBLIGATOIRE
-        'provider' => 'users',
-    ],
-],
-
     /*
     |--------------------------------------------------------------------------
     | Expiration Minutes
@@ -56,8 +51,6 @@ return [
     | "expires_at" attribute, but first-party sessions are not affected.
     |
     */
-
-    'expiration' => null,
 
     /*
     |--------------------------------------------------------------------------
@@ -84,11 +77,5 @@ return [
     | request. You may change the middleware listed below as required.
     |
     */
-
-    'middleware' => [
-        'authenticate_session' => Laravel\Sanctum\Http\Middleware\AuthenticateSession::class,
-        'encrypt_cookies' => Illuminate\Cookie\Middleware\EncryptCookies::class,
-        'validate_csrf_token' => Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
-    ],
 
 ];

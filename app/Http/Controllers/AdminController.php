@@ -25,28 +25,22 @@ class AdminController extends Controller
     }
 
     /**
-     * KPIs — données pour les 3 graphiques
+     * KPIs — données pour les 3 graphiques existants
      */
     public function getKpis()
     {
-        // 1. Vues par artiste (top 10)
-        $viewsByArtist = Artist::with('user')
-            ->orderByDesc('views_count')
-            ->take(10)
-            ->get()
+        $viewsByArtist = Artist::with('user')->orderByDesc('views_count')->take(10)->get()
             ->map(function ($artist) {
-                $name = $artist->stage_name;
+                $name  = $artist->stage_name;
                 $label = is_array($name)
                     ? ($name['fr'] ?? $name['en'] ?? 'Artiste')
                     : ($name ?? 'Artiste');
                 return [
                     'name'   => $label,
                     'views'  => (int) ($artist->views_count  ?? 0),
-                    'clicks' => (int) ($artist->clicks_count ?? 0),
                 ];
             });
 
-        // 2. Œuvres par catégorie
         $artworksByCategory = Category::withCount('artworks')->get()->map(function ($cat) {
             $name = $cat->name;
             return [
@@ -55,7 +49,6 @@ class AdminController extends Controller
             ];
         })->filter(fn($c) => $c['total'] > 0)->values();
 
-        // 3. Inscriptions par jour (30 derniers jours)
         $registrations = User::select(
                 DB::raw('DATE(created_at) as date'),
                 DB::raw('COUNT(*) as total')
@@ -65,18 +58,101 @@ class AdminController extends Controller
             ->orderBy('date', 'ASC')
             ->get()
             ->map(function ($r) {
-                return [
-                    'date'  => $r->date,
-                    'total' => (int) $r->total,
-                ];
+                return ['date' => $r->date, 'total' => (int) $r->total];
             });
 
         return response()->json([
-            'views_by_artist'     => $viewsByArtist,
-            'artworks_by_category'=> $artworksByCategory,
-            'registrations'       => $registrations,
+            'views_by_artist'      => $viewsByArtist,
+            'artworks_by_category' => $artworksByCategory,
+            'registrations'        => $registrations,
         ]);
     }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // NOUVEAU — Reporting via la VUE SQL  artistes_stats_vue
+    // GET /api/admin/reporting?limit=20
+    //
+    // La vue est créée par la procédure stockée view_artist() appelée
+    // dans la migration. Elle agrège en une seule requête :
+    //   - vues totales + vues des 30 derniers jours (depuis artist_stats)
+    //   - nombre d'œuvres et d'événements de chaque artiste
+    // On fait juste un SELECT dessus — toute la logique est dans la vue.
+    // ═══════════════════════════════════════════════════════════════════
+    public function getReporting(Request $request)
+    {
+        $limit = (int) $request->query('limit', 20);
+        $limit = min(max($limit, 1), 100);
+
+        try {
+            $rows = DB::select("
+                SELECT
+                    artist_id,
+                    email,
+                    prenom,
+                    nom,
+                    nom_scene_fr,
+                    ville,
+                    pays,
+                    vues_totales,
+                    vues_30_jours,
+                    nb_artworks,
+                    nb_events,
+                    inscrit_le
+                FROM artistes_stats_vue
+                ORDER BY vues_30_jours DESC
+                LIMIT ?
+            ", [$limit]);
+        } catch (\Exception $e) {
+            // Vue absente (migration non encore lancée) → retourne tableau vide
+            $rows = [];
+        }
+
+        return response()->json([
+            'source' => 'vue:artistes_stats_vue',
+            'limit'  => $limit,
+            'total'  => count($rows),
+            'data'   => $rows,
+        ]);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════
+    // NOUVEAU — Log des suppressions via le TRIGGER SQL
+    // GET /api/admin/suppression-log
+    //
+    // Le trigger trg_log_artiste_suppression écrit automatiquement dans
+    // artistes_suppression_log avant chaque DELETE sur artists.
+    // Cette méthode retourne les 50 dernières lignes de ce log.
+    // ═══════════════════════════════════════════════════════════════════
+    public function getSuppressionLog()
+    {
+        try {
+            $rows = DB::select("
+                SELECT
+                    id,
+                    artist_id,
+                    email,
+                    nom_scene_fr,
+                    slug,
+                    views_count,
+                    supprime_le,
+                    raison
+                FROM artistes_suppression_log
+                ORDER BY supprime_le DESC
+                LIMIT 50
+            ");
+        } catch (\Exception $e) {
+            // Table absente (migration non encore lancée)
+            $rows = [];
+        }
+
+        return response()->json([
+            'source' => 'trigger:trg_log_artiste_suppression',
+            'total'  => count($rows),
+            'data'   => $rows,
+        ]);
+    }
+
+    // ─── Méthodes existantes (inchangées) ─────────────────────────────
 
     public function getArtists(Request $request)
     {
@@ -87,7 +163,7 @@ class AdminController extends Controller
             $artist    = $user->artist;
             $stageName = '';
             if ($artist) {
-                $sn = $artist->stage_name;
+                $sn        = $artist->stage_name;
                 $stageName = is_array($sn) ? ($sn[$locale] ?? $sn['fr'] ?? '') : ($sn ?? '');
             }
             return [
@@ -120,12 +196,12 @@ class AdminController extends Controller
                 ? ($art->description[$locale] ?? $art->description['fr'] ?? '')
                 : ($art->description ?? '');
 
-            $catName = null;
+            $catName    = null;
+            $artistName = null;
+
             if ($art->category && is_array($art->category->name)) {
                 $catName = $art->category->name[$locale] ?? $art->category->name['fr'] ?? null;
             }
-
-            $artistName = null;
             if ($art->artist && is_array($art->artist->stage_name)) {
                 $artistName = $art->artist->stage_name[$locale]
                     ?? $art->artist->stage_name['fr']
@@ -133,10 +209,10 @@ class AdminController extends Controller
             }
 
             return [
-                'id'          => $art->id,
-                'image_url'   => $art->image_url,
-                'category_id' => $art->category_id,
-                'date_creation'=> $art->date_creation,
+                'id'            => $art->id,
+                'image_url'     => $art->image_url,
+                'category_id'   => $art->category_id,
+                'date_creation' => $art->date_creation,
                 'artwork_translations' => [[
                     'title'       => $title,
                     'description' => $desc,
@@ -182,7 +258,7 @@ class AdminController extends Controller
         }));
     }
 
-    public function updateArtist(Request $request, $id)
+    public function updateArtist(Request $request, int $id)
     {
         $user = User::findOrFail($id);
         $request->validate([
@@ -208,13 +284,13 @@ class AdminController extends Controller
         return response()->json(['message' => 'Artiste mis à jour']);
     }
 
-    public function deleteArtist($id)
+    public function deleteArtist(int $id)
     {
         User::findOrFail($id)->delete();
         return response()->json(['message' => 'Artiste supprimé']);
     }
 
-    public function updateArtwork(Request $request, $id)
+    public function updateArtwork(Request $request, int $id)
     {
         $artwork = Artwork::findOrFail($id);
         $request->validate([
@@ -231,7 +307,7 @@ class AdminController extends Controller
         return response()->json(['message' => 'Œuvre modifiée']);
     }
 
-    public function deleteArtwork($id)
+    public function deleteArtwork(int $id)
     {
         Artwork::findOrFail($id)->delete();
         return response()->json(['message' => 'Œuvre supprimée']);
@@ -258,7 +334,7 @@ class AdminController extends Controller
         return response()->json(['message' => 'Événement créé']);
     }
 
-    public function updateEvent(Request $request, $id)
+    public function updateEvent(Request $request,int $id)
     {
         $event = Event::findOrFail($id);
         $request->validate([
@@ -278,7 +354,7 @@ class AdminController extends Controller
         return response()->json(['message' => 'Événement mis à jour']);
     }
 
-    public function deleteEvent($id)
+    public function deleteEvent(int $id)
     {
         Event::findOrFail($id)->delete();
         return response()->json(['message' => 'Événement supprimé']);

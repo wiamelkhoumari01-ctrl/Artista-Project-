@@ -28,8 +28,9 @@
     "read_more": "Lire Plus"
   },
   "events": {
-    "title": "Événements à venir",
+    "title": "Tournées & Événements",
     "subtitle": "Ne manquez pas les prochaines expositions et tournées.",
+    "section":"Programmation Culturelle",
     "location": "Lieu",
     "date": "Date",
     "view_details": "Détails de l'événement"

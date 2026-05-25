@@ -1,19 +1,17 @@
-import React from "react";
+import React from 'react';
 
 export default function FiltrerBar({ categories, activeCategory, onFilterChange }) {
   return (
     <div className="filter-container">
-
-      {categories.map((cat) => (
+      {categories.map(cat => (
         <button
-          key={cat}
-          className={activeCategory === cat ? "active" : ""}
-          onClick={() => onFilterChange(cat)}
+          key={cat.id ?? 'tous'}
+          className={activeCategory === cat.id ? 'active' : ''}
+          onClick={() => onFilterChange(cat.id)}
         >
-          {cat}
+          {cat.label}
         </button>
       ))}
-
     </div>
   );
 }

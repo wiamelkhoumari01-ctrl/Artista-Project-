@@ -12,7 +12,7 @@ class Artist extends Model
     protected $fillable = [
         'user_id', 'category_id', 'image_url', 'stage_name',
         'bio', 'specialite', 'slug', 'phone', 'country', 'city', 'website',
-        'views_count', 'clicks_count',
+        'views_count',
     ];
 
     protected $casts = [

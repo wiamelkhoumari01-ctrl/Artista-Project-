@@ -137,7 +137,7 @@ export default function OnboardingModal({ onClose }) {
     const token = getToken();
     if (token) {
       try {
-        await authApi(token).post('/api/artist/set-locale', { locale: selectedLang });
+        await authApi(token).post('/api/user/set-locale', { locale: selectedLang });
       } catch (e) {
         console.warn('[Onboarding Step3] set-locale échoué:', e.response?.data);
       }
@@ -410,7 +410,7 @@ const styles = {
     color: '#999', fontWeight: 600, fontSize: 14,
     cursor: 'pointer', fontFamily: 'inherit', flex: 1,
   },
-  btnRow:    { display: 'flex', gap: 12, marginTop: 8 },
+  btnRow: { display: 'flex', gap: 12, marginTop: 8 },
   dropzone: {
     border: '2px dashed', borderRadius: 20, padding: 40,
     textAlign: 'center', cursor: 'pointer',

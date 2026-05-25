@@ -1,0 +1,307 @@
+/* ================================================
+   EVENTS TIMELINE — DESIGN IDENTIQUE A LA PHOTO
+================================================ */
+
+.ev-timeline-section {
+    padding: 100px 0;
+    background: #000;
+    color: #111;
+    overflow: hidden;
+}
+
+/* Header */
+.ev-timeline-header {
+    text-align: center;
+    margin-bottom: 70px;
+}
+
+.ev-timeline-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #e67e22;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+.ev-timeline-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 16px;
+    line-height: 1.1;
+}
+
+.ev-timeline-subtitle {
+    font-size: 16px;
+    color: rgba(255,255,255,0.6);
+    margin:0;
+}
+
+
+/* ===========================
+   TIMELINE
+=========================== */
+
+.ev-timeline-track {
+    position: relative;
+    max-width: 1000px;
+    margin: auto;
+}
+
+/* Ligne centrale */
+
+.ev-timeline-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgba(255, 231, 231, 0.626);
+    transform: translateX(-50%);
+}
+
+/* Item */
+
+.ev-tl-item {
+    position: relative;
+    width: 45%;
+    margin-bottom: 90px;
+}
+
+.ev-tl-left {
+    margin-right: auto;
+}
+
+.ev-tl-right {
+    margin-left: auto;
+}
+
+
+/* Dot */
+
+.ev-tl-dot {
+    position: absolute;
+    top: 50px;
+    width: 14px;
+    height: 14px;
+    background: #fff;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+.ev-tl-left .ev-tl-dot {
+    right: -60px;
+}
+
+.ev-tl-right .ev-tl-dot {
+    left: -60px;
+}
+
+
+
+/* ===========================
+   CARD
+=========================== */
+
+.ev-tl-card {
+    background: #eaeaea;
+    padding: 30px;
+    border-radius: 20px;
+    position: relative;
+    transition: .3s;
+}
+
+.ev-tl-card:hover {
+    transform: translateY(-5px);
+}
+
+
+
+/* ===========================
+   DATE
+=========================== */
+
+.ev-tl-date-block {
+    margin-bottom: 20px;
+}
+
+.ev-tl-day {
+    font-size: 60px;
+    font-weight: 800;
+    color: #e67e22;
+    display: block;
+    line-height: 1;
+    font-family: 'Playfair Display', serif;
+}
+
+.ev-tl-month {
+    font-size: 20px;
+    color: #e67e22;
+     margin-top: 2px;
+}
+
+
+
+/* ===========================
+   BADGE
+=========================== */
+
+.ev-tl-badge {
+    position: absolute;
+    top: 25px;
+    inset-inline-end: 25px; 
+    padding: 8px 18px;
+    border-radius: 25px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.st-current {
+    background: #27ae60;
+    color: #fff;
+}
+
+.st-upcoming {
+    background: #e67e22;
+    color: #fff;
+}
+
+.st-past {
+    background: #999;
+    color: #fff;
+}
+
+
+
+/* ===========================
+   TITLE
+=========================== */
+
+.ev-tl-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+
+/* Venue */
+
+.ev-tl-venue {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+
+/* Description */
+
+.ev-tl-desc {
+    color: #555;
+    line-height: 1.6;
+}
+.ev-timeline-cta {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.ev-tl-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 32px;
+    background: transparent;
+    border: 1.5px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none !important;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+}
+
+.ev-tl-btn:hover {
+    background: #e67e22;
+    border-color: #e67e22;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.ev-tl-btn svg {
+    transition: transform 0.2s;
+}
+
+.ev-tl-btn:hover svg {
+    transform: translateX(4px);
+}
+
+
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media (max-width: 992px){
+
+.ev-tl-item{
+width:100%;
+padding-left:60px;
+}
+
+.ev-timeline-line{
+left:20px;
+}
+
+.ev-tl-dot{
+left:12px !important;
+right:auto;
+}
+
+}
+
+
+
+@media (max-width:768px){
+
+.ev-tl-card{
+padding:25px;
+}
+
+.ev-tl-day{
+font-size:50px;
+}
+
+.ev-tl-title{
+font-size:20px;
+}
+
+.ev-timeline-title{
+font-size:32px;
+}
+
+}
+
+
+
+@media (max-width:480px){
+
+.ev-tl-day{
+font-size:40px;
+}
+
+.ev-tl-month{
+font-size:16px;
+}
+
+.ev-tl-title{
+font-size:18px;
+}
+
+}

@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
 import api from '../../api';
 import { useLanguage } from '../../context/LanguageContext';
 import '../../../css/admin-dashboard.css';
@@ -9,13 +7,13 @@ import '../../../css/admin-dashboard.css';
 export default function AdminDashboard() {
     const { locale, t } = useLanguage();
 
-    const [stats,      setStats]      = useState({ total_artists: 0, total_artworks: 0, total_events: 0 });
-    const [artists,    setArtists]    = useState([]);
-    const [artworks,   setArtworks]   = useState([]);
-    const [events,     setEvents]     = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [loading,    setLoading]    = useState(true);
-    const [showModal,  setShowModal]  = useState(false);
+    const [stats,       setStats]       = useState({ total_users:0, total_artists: 0, total_artworks: 0, total_events: 0 });
+    const [artists,     setArtists]     = useState([]);
+    const [artworks,    setArtworks]    = useState([]);
+    const [events,      setEvents]      = useState([]);
+    const [categories,  setCategories]  = useState([]);
+    const [loading,     setLoading]     = useState(true);
+    const [showModal,   setShowModal]   = useState(false);
     const [modalConfig, setModalConfig] = useState({ type: '', action: '', data: null });
 
     const [formData, setFormData] = useState({
@@ -28,19 +26,19 @@ export default function AdminDashboard() {
         setLoading(true);
         try {
             const [s, a, art, ev, cat] = await Promise.all([
-                api.get('/api/admin/stats').catch(() => ({ data: { total_artists: 0, total_artworks: 0, total_events: 0 } })),
+                api.get('/api/admin/stats').catch(() => ({ data: { total_users:0, total_artists: 0, total_artworks: 0, total_events: 0 } })),
                 api.get(`/api/admin/artists?lang=${locale}`).catch(() => ({ data: [] })),
                 api.get(`/api/admin/artworks?lang=${locale}`).catch(() => ({ data: [] })),
                 api.get(`/api/admin/events?lang=${locale}`).catch(() => ({ data: [] })),
                 api.get('/api/categories').catch(() => ({ data: [] })),
             ]);
-            setStats(s.data || { total_artists: 0, total_artworks: 0, total_events: 0 });
-            setArtists(Array.isArray(a.data)   ? a.data   : []);
-            setArtworks(Array.isArray(art.data) ? art.data : []);
-            setEvents(Array.isArray(ev.data)   ? ev.data  : []);
-            setCategories(Array.isArray(cat.data) ? cat.data : []);
+            setStats(s.data || { total_users:0,  total_artists: 0, total_artworks: 0, total_events: 0 });
+            setArtists(Array.isArray(a.data)      ? a.data      : []);
+            setArtworks(Array.isArray(art.data)   ? art.data    : []);
+            setEvents(Array.isArray(ev.data)      ? ev.data     : []);
+            setCategories(Array.isArray(cat.data) ? cat.data    : []);
         } catch (e) {
-            console.error("Erreur chargement:", e);
+            console.error('Erreur chargement:', e);
         } finally {
             setLoading(false);
         }
@@ -54,17 +52,73 @@ export default function AdminDashboard() {
         catch { return ''; }
     };
 
+    // ═══════════════════════════════════════════════════════════════════
+    // EXPORT XML — remplace l'ancien Export PDF
+    // Construit un document XML valide avec l'encodage UTF-8,
+    // puis le télécharge via un lien <a> temporaire.
+    // Chaque artiste devient un nœud <artiste> avec ses enfants :
+    //   <nom>, <email>, <telephone>, <pays>, <inscrit_le>
+    // ═══════════════════════════════════════════════════════════════════
+    const exportArtistsXML = () => {
+        const now = new Date().toISOString();
+
+        // Échappe les caractères spéciaux XML pour éviter les erreurs de parsing
+        const escXml = (str) =>
+            String(str || '')
+                .replace(/&/g,  '&amp;')
+                .replace(/</g,  '&lt;')
+                .replace(/>/g,  '&gt;')
+                .replace(/"/g,  '&quot;')
+                .replace(/'/g,  '&apos;');
+
+        // Construction ligne par ligne pour garder une indentation lisible
+        const lines = [
+            '<?xml version="1.0" encoding="UTF-8"?>',
+            `<artistes total="${artists.length}" exporte_le="${now}" source="ARTISTA">`,
+        ];
+
+        artists.forEach((u, index) => {
+            const prenom   = escXml(u.artist?.artist_translations?.[0]?.first_name || '');
+            const nom      = escXml(u.artist?.artist_translations?.[0]?.last_name  || '');
+            const email    = escXml(u.email    || '');
+            const tel      = escXml(u.artist?.phone   || 'N/A');
+            const pays     = escXml(u.artist?.country || 'N/A');
+
+            lines.push(`  <artiste id="${u.id}" ordre="${index + 1}">`);
+            lines.push(`    <nom>${prenom} ${nom}</nom>`);
+            lines.push(`    <email>${email}</email>`);
+            lines.push(`    <telephone>${tel}</telephone>`);
+            lines.push(`    <pays>${pays}</pays>`);
+            lines.push(`  </artiste>`);
+        });
+
+        lines.push('</artistes>');
+
+        const xmlString = lines.join('\n');
+
+        // Téléchargement côté navigateur sans librairie externe
+        const blob = new Blob([xmlString], { type: 'application/xml;charset=utf-8;' });
+        const url  = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href     = url;
+        link.download = `artistes_${new Date().toISOString().slice(0, 10)}.xml`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    };
+
     const openModal = (type, action, item = null) => {
         setModalConfig({ type, action, data: item });
         if (item) {
             setFormData({
                 first_name:   item.artist?.artist_translations?.[0]?.first_name || '',
                 last_name:    item.artist?.artist_translations?.[0]?.last_name  || '',
-                email:        item.email        || '',
+                email:        item.email           || '',
                 phone:        item.artist?.phone   || '',
                 country:      item.artist?.country || '',
                 title:        item.artwork_translations?.[0]?.title
-                           || item.event_translations?.[0]?.title  || '',
+                           || item.event_translations?.[0]?.title   || '',
                 description:  item.artwork_translations?.[0]?.description
                            || item.event_translations?.[0]?.description || '',
                 venue_name:   item.venue_name    || '',
@@ -107,9 +161,9 @@ export default function AdminDashboard() {
                     });
                 } else if (type === 'event') {
                     await api.put(`/api/admin/events/${item.id}`, {
-                        type:        formData.type,
-                        title:       { fr: formData.title, en: formData.title, ar: formData.title },
-                        description: { fr: formData.description, en: formData.description, ar: formData.description },
+                        type:         formData.type,
+                        title:        { fr: formData.title, en: formData.title, ar: formData.title },
+                        description:  { fr: formData.description, en: formData.description, ar: formData.description },
                         venue_name:   formData.venue_name,
                         start_date:   formData.start_date,
                         end_date:     formData.end_date,
@@ -120,25 +174,8 @@ export default function AdminDashboard() {
             setShowModal(false);
             loadData();
         } catch (err) {
-            alert(err.response?.data?.message || 'Erreur lors de l\'opération.');
+            alert(err.response?.data?.message || "Erreur lors de l'opération.");
         }
-    };
-
-    const generateArtistsPDF = () => {
-        const doc = new jsPDF();
-        doc.text('ARTISTA — Liste des Artistes', 14, 20);
-        autoTable(doc, {
-            startY: 30,
-            head: [['Nom', 'Email', 'Téléphone', 'Pays']],
-            body: artists.map(u => [
-                `${u.artist?.artist_translations?.[0]?.first_name || ''} ${u.artist?.artist_translations?.[0]?.last_name || ''}`,
-                u.email,
-                u.artist?.phone   || 'N/A',
-                u.artist?.country || 'N/A',
-            ]),
-            styles: { fillColor: [197, 160, 89] },
-        });
-        doc.save("artistes.pdf");
     };
 
     if (loading) return <div className="admin-loading">Chargement...</div>;
@@ -147,31 +184,32 @@ export default function AdminDashboard() {
         <div className="admin-layout">
             <main className="admin-main">
 
-                {/* Header */}
+                {/* ── Header ── */}
                 <header className="admin-topbar">
                     <h1>Dashboard Administration</h1>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        
                         <span className="badge-lang">{locale.toUpperCase()}</span>
                         <Link to="/admin/kpis" className="btn-kpi">
-                             Monitoring & KPIs
+                            Monitoring & KPIs
                         </Link>
                     </div>
                 </header>
 
-                {/* Stats */}
+                {/* ── Stats ── */}
                 <div className="cards">
+                    <div className="card"><h3>{stats.total_users   || 0}</h3><p>Utilisateurs</p></div>
                     <div className="card"><h3>{stats.total_artists  || 0}</h3><p>Artistes</p></div>
                     <div className="card"><h3>{stats.total_artworks || 0}</h3><p>Œuvres</p></div>
                     <div className="card"><h3>{stats.total_events   || 0}</h3><p>Événements</p></div>
                 </div>
 
-                {/* Table Artistes */}
+                {/* ── Table Artistes ── */}
                 <section className="table-section">
                     <div className="section-header">
                         <h2>Artistes inscrits</h2>
-                        <button onClick={generateArtistsPDF} className="btn-pdf-classic">
-                            Export PDF
+                        {/* ── BOUTON XML (remplace Export PDF) ── */}
+                        <button onClick={exportArtistsXML} className="btn-pdf-classic">
+                            ⬇ Export XML
                         </button>
                     </div>
                     <div className="table-responsive-wrapper">
@@ -206,7 +244,7 @@ export default function AdminDashboard() {
                     </div>
                 </section>
 
-                {/* Table Œuvres */}
+                {/* ── Table Œuvres ── */}
                 <section className="table-section">
                     <div className="section-header">
                         <h2>Œuvres publiées</h2>
@@ -232,13 +270,13 @@ export default function AdminDashboard() {
                                             <button className="btn-action delete" onClick={() => openModal('artwork', 'Supprimer', w)}>Supprimer</button>
                                         </td>
                                     </tr>
-                                )) : <tr><td colSpan="5" className="td-empty">Aucune œuvre trouvée.</td></tr>}
+                                )) : <tr><td colSpan="4" className="td-empty">Aucune œuvre trouvée.</td></tr>}
                             </tbody>
                         </table>
                     </div>
                 </section>
 
-                {/* Table Événements */}
+                {/* ── Table Événements ── */}
                 <section className="table-section">
                     <div className="section-header">
                         <h2>Événements</h2>
@@ -282,7 +320,7 @@ export default function AdminDashboard() {
 
             </main>
 
-            {/* Modal */}
+            {/* ── Modal Modifier / Supprimer ── */}
             {showModal && (
                 <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setShowModal(false)}>
                     <div className="modal-box">
@@ -290,9 +328,9 @@ export default function AdminDashboard() {
                             <div className="modal-header">
                                 <h3>
                                     {modalConfig.action === 'Modifier' ? 'Modifier' : 'Supprimer'}{' '}
-                                    {modalConfig.type === 'artist' ? 'l\'artiste'
-                                        : modalConfig.type === 'artwork' ? 'l\'œuvre'
-                                        : 'l\'événement'}
+                                    {modalConfig.type === 'artist'  ? "l'artiste"
+                                   : modalConfig.type === 'artwork' ? "l'œuvre"
+                                   : "l'événement"}
                                 </h3>
                                 <button type="button" className="modal-close" onClick={() => setShowModal(false)}>×</button>
                             </div>

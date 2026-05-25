@@ -28,13 +28,17 @@ export const LanguageProvider = ({ children }) => {
         localStorage.setItem('app_locale', locale);
     }, [locale]);
 
-    // 3. Fonction pour changer la langue
     const changeLanguage = (code) => {
-        if (translations[code]) {
-            setLocale(code);
+    if (translations[code]) {
+        setLocale(code);
+        const token = localStorage.getItem('access_token');
+        if (token) {
+            import('../api').then(({ default: api }) => {
+                api.post('/api/user/set-locale', { locale: code }).catch(() => {});
+            });
         }
-    };
-
+    }
+};
     /**
      * 4. Fonction de traduction statique t()
      * Gère les chemins imbriqués type 'nav.home'

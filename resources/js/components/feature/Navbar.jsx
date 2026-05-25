@@ -4,7 +4,7 @@ import { HashLink } from 'react-router-hash-link';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 
-export default function Navbar() {
+export default function Navbar({ onMenuToggle }) {
   const [scrolled,  setScrolled]  = useState(false);
   const [isOpen,    setIsOpen]    = useState(false);
   const [isMobile,  setIsMobile]  = useState(window.innerWidth < 992);
@@ -33,6 +33,9 @@ export default function Navbar() {
 
   // ── Ferme au changement de route ─────────────────────────────────────
   useEffect(() => { setIsOpen(false); }, [location]);
+
+  // ── Notifie App quand le menu s'ouvre/ferme ──────────────────────────
+  useEffect(() => { onMenuToggle?.(isOpen); }, [isOpen]);
 
   // ── Ferme au clic extérieur ──────────────────────────────────────────
   useEffect(() => {

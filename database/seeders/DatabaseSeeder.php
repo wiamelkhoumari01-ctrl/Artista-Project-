@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        if (app()->environment('local', 'testing')) {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         
         DB::table('artist_event')->truncate();
@@ -25,6 +26,7 @@ class DatabaseSeeder extends Seeder
         User::truncate();
         
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        }
 
         // Utilisation des variables d'environnement
         User::create([
@@ -35,6 +37,7 @@ class DatabaseSeeder extends Seeder
             'role'              => 'admin',
             'locale'            => 'fr',
             'email_verified_at' => now(),
+            'remember_token'    => \Illuminate\Support\Str::random(10), 
         ]);
 
         User::factory(20)->create();

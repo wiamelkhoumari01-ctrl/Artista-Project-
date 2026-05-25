@@ -213,7 +213,7 @@ export default function EventsPage() {
             {/* ── Contenu ── */}
             <div className="container ev-content-area">
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32, flexWrap: 'wrap', gap: 12 }}>
-                    <h2 className="ev-section-title">Programmation Culturelle</h2>
+                    <h2 className="ev-section-title">{t('events.section')}</h2>
                     {activeFiltersCount > 0 && (
                         <button className="ev-reset-inline" onClick={resetFilters}>
                             <i className="fas fa-times"></i> Effacer les filtres ({activeFiltersCount})

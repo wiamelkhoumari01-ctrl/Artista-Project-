@@ -1,15 +1,20 @@
-.page-analyse{
+
+/* ── Layout général ── */
+.page-analyse {
     background-color: #f6efe6;
     min-height: 100vh;
     padding-top: 90px;
     padding-bottom: 60px;
 }
+
 .conteneur-kpi {
     max-width: 1100px;
     margin: 0 auto;
     padding: 0 15px;
 }
-.en-tete-flex{
+
+/* ── Header ── */
+.en-tete-flex {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -17,6 +22,7 @@
     flex-wrap: wrap;
     gap: 16px;
 }
+
 .sur-titre {
     font-size: 11px;
     font-weight: 700;
@@ -25,14 +31,16 @@
     letter-spacing: 0.1em;
     margin: 0 0 6px;
 }
-.titre-principal{
+
+.titre-principal {
     font-family: 'Playfair Display', serif;
     font-size: 30px;
     font-weight: 700;
     color: #1a1a1a;
     margin: 0;
 }
-.bouton-retour{
+
+.bouton-retour {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -46,15 +54,21 @@
     text-decoration: none;
     transition: all 0.3s ease;
 }
-.bouton-retour:hover{
+
+.bouton-retour:hover {
     background: #c5a059;
     color: #fff;
 }
+
+/* ── Grille des cartes graphiques ── */
 .grille-colonnes {
     display: flex;
     flex-direction: column;
     gap: 28px;
+    margin-bottom: 40px;
 }
+
+/* ── Carte générique ── */
 .carte-stat {
     background: #fff;
     border-radius: 20px;
@@ -62,9 +76,11 @@
     box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
     border: 1px solid rgba(0, 0, 0, 0.04);
 }
+
 .entete-carte {
     margin-bottom: 24px;
 }
+
 .titre-carte {
     font-family: 'Playfair Display', serif;
     font-size: 20px;
@@ -72,44 +88,63 @@
     color: #1a1a1a;
     margin: 0 0 4px;
 }
+
 .sous-titre-carte {
     font-size: 13px;
     color: #aaa;
 }
+
+.sous-titre-carte code {
+    background: #f6efe6;
+    color: #c5a059;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* ── Camembert ── */
 .section-camembert {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     gap: 24px;
 }
+
 .legende-liste {
     display: flex;
     flex-direction: column;
     gap: 10px;
     min-width: 200px;
 }
+
 .item-legende {
     display: flex;
     align-items: center;
     gap: 10px;
 }
-.pastille-couleur{
+
+.pastille-couleur {
     width: 14px;
     height: 14px;
     border-radius: 4px;
     flex-shrink: 0;
 }
-.nom-categorie{
+
+.nom-categorie {
     font-size: 13px;
     color: #555;
     flex: 1;
 }
-.valeur-categorie{
+
+.valeur-categorie {
     font-size: 13px;
     font-weight: 700;
     color: #1a1a1a;
 }
-.etat-vide{
+
+/* ── États vides / chargement ── */
+.etat-vide {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -117,7 +152,315 @@
     padding: 48px 20px;
     text-align: center;
 }
+
 .chargement-centre {
     text-align: center;
     padding: 80px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION SQL — Vue + Trigger
+═══════════════════════════════════════════════════════════════ */
+
+.sql-section {
+    margin-top: 12px;
+}
+
+/* En-tête de la section SQL */
+.sql-section-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.sql-section-titre {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 6px;
+}
+
+.sql-section-desc {
+    font-size: 13px;
+    color: #888;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* ── Badges VUE / TRIGGER ── */
+.badge-sql {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+
+.badge-sql.vue {
+    background: rgba(33, 150, 243, 0.12);
+    color: #1565c0;
+    border: 1px solid rgba(33, 150, 243, 0.25);
+}
+
+.badge-sql.trigger {
+    background: rgba(156, 39, 176, 0.1);
+    color: #6a1b9a;
+    border: 1px solid rgba(156, 39, 176, 0.2);
+}
+
+/* ── Tabs (Vue / Trigger) ── */
+.sql-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.sql-tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 22px;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-bottom: none;
+    border-radius: 14px 14px 0 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #aaa;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+    margin-right: 4px;
+}
+
+.sql-tab:hover {
+    color: #555;
+    background: #fdfaf6;
+}
+
+.sql-tab.actif {
+    color: #1a1a1a;
+    background: #fff;
+    border-color: rgba(0, 0, 0, 0.08);
+    position: relative;
+    z-index: 1;
+    /* Efface la bordure basse pour la fusionner avec la carte */
+    box-shadow: 0 -2px 0 0 #fff inset;
+}
+
+/* Compteur dans le tab */
+.sql-tab-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    background: rgba(197, 160, 89, 0.15);
+    color: #c5a059;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 99px;
+    margin-left: 4px;
+}
+
+.sql-tab-count.alerte {
+    background: rgba(229, 57, 53, 0.1);
+    color: #e53935;
+}
+
+/* ── Tableau SQL ── */
+.table-scroll {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 12px;
+}
+
+.sql-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+    font-size: 13px;
+}
+
+.sql-table thead tr {
+    background: #fdfaf6;
+    border-bottom: 2px solid rgba(197, 160, 89, 0.15);
+}
+
+.sql-table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    color: #bbb;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    white-space: nowrap;
+}
+
+.sql-table th.col-num {
+    text-align: center;
+}
+
+.sql-table tbody tr {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    transition: background 0.15s;
+}
+
+.sql-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.sql-table tbody tr:hover {
+    background: #fdfaf6;
+}
+
+.sql-table td {
+    padding: 13px 16px;
+    vertical-align: middle;
+}
+
+.sql-table td.col-num {
+    text-align: center;
+}
+
+.sql-table td.col-rank {
+    width: 48px;
+    text-align: center;
+}
+
+/* ── Éléments dans les cellules ── */
+.artiste-nom {
+    font-weight: 700;
+    color: #1a1a1a;
+    font-size: 14px;
+    display: block;
+}
+
+.email-cell {
+    color: #888;
+    font-size: 12px;
+    word-break: break-all;
+}
+
+/* Badge numérique */
+.num-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 99px;
+    background: rgba(0, 0, 0, 0.05);
+    color: #555;
+    font-weight: 700;
+    font-size: 12px;
+    min-width: 36px;
+    text-align: center;
+}
+
+/* Badge doré pour vues 30j (la métrique principale) */
+.num-badge.gold {
+    background: rgba(197, 160, 89, 0.15);
+    color: #b8893a;
+}
+
+/* Médailles top 3 */
+.medal {
+    font-size: 18px;
+}
+
+/* Date de suppression */
+.date-suppression {
+    color: #e53935;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Badge raison */
+.raison-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.04);
+    color: #888;
+    font-size: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+    .page-analyse {
+        padding-top: 70px;
+        padding-bottom: 40px;
+    }
+
+    .titre-principal {
+        font-size: 22px;
+    }
+
+    .en-tete-flex {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .bouton-retour {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .sql-tabs {
+        flex-direction: column;
+    }
+
+    .sql-tab {
+        border-radius: 12px;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        margin-right: 0;
+        margin-bottom: 4px;
+    }
+
+    .sql-tab.actif {
+        border-color: #c5a059;
+        color: #c5a059;
+    }
+
+    .carte-stat[style] {
+        border-radius: 20px !important;
+    }
+
+    .sql-section-titre {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .conteneur-kpi {
+        padding: 0 10px;
+    }
+
+    .carte-stat {
+        padding: 20px 14px;
+    }
+
+    .sql-table {
+        font-size: 12px;
+    }
+
+    .sql-table th,
+    .sql-table td {
+        padding: 10px 10px;
+    }
 }

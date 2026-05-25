@@ -6,16 +6,17 @@ import App from './App.jsx';
 // --- IMPORTS DES STYLES ---
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import '../css/main.css';
 import '../css/contact.css';
 import '../css/Footer.css';
 import '../css/login.css';
 import '../css/inscription.css';
 import '../css/ArtistBiosSection.css';
+import '../css/EventEnCours.css';
 import '../css/temoignageSection.css';
 import "../css/Profile.module.css";
 import "../css/AdminKpis.css";
-
+import '../css/main.css';
+import '../css/chatbot.css';
 
 const rootElement = document.getElementById('root');
 if (rootElement) {

@@ -19,15 +19,14 @@ class User extends Authenticatable
         'email', 
         'password', 
         'role', // admin, artiste, utilisateur
-        'email_verified_at', "locale",
+        'email_verified_at', "locale",'remember_token'
     ];
 
     /**
      * Les attributs cachés pour les réponses API.
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'password'
     ];
 
     /**

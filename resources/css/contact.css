@@ -71,6 +71,11 @@
 .form-control[placeholder]{
     color:rgb(210, 210, 210);
 }
+.contact-form-card .form-control,
+.contact-form-card input,
+.contact-form-card textarea {
+    color: #000;
+}
 .btn-send {
   background-color: #000;
   color: white;
